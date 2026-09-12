@@ -21,9 +21,6 @@ const BestsellerSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-6 sm:mb-8 text-left">
-          <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-[0.2em] block mb-1">
-            Customer Favorites
-          </span>
           <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-[#1B3B2B] tracking-tight">
             What people love
           </h2>

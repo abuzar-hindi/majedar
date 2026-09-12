@@ -37,9 +37,6 @@ const MenuPreview = ({ selectedCategory = "All" }) => {
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-stone-200/80">
           <div>
-            <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-[0.2em] block mb-1">
-              Curated Selection
-            </span>
             <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-[#1B3B2B] tracking-tight">
               Explore Our Menu
             </h2>

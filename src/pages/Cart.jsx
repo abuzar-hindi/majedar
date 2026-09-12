@@ -49,10 +49,7 @@ const Cart = () => {
         {/* Page Header */}
         <div className="flex items-center justify-between pb-6 mb-6 border-b border-stone-200">
           <div>
-            <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
-              Review Your Order
-            </span>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#1B3B2B]">
+            <h1 className="font-hero text-2xl sm:text-3xl font-bold text-[#1B3B2B]">
               Your Cart
             </h1>
           </div>

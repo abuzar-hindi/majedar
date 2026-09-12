@@ -68,12 +68,12 @@ const CategoryNav = ({ activeCategory, setActiveCategory }) => {
     <section className="w-full bg-[#FAF8F5] py-8 sm:py-12 border-b border-stone-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6 text-left">
-          <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-[0.2em] block mb-1">
-            Browse Menu
-          </span>
           <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-[#1B3B2B] tracking-tight">
             Food Categories
           </h2>
+           <p className="text-stone-500 text-xs sm:text-sm mt-1 font-normal">
+            Your Choice - Our Kitchen
+          </p>
         </div>
 
         {/* Circular Horizontal Scrolling Category Row */}

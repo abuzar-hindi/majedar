@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Hero from "../components/Hero";
-import SearchSection from "../components/SearchSection";
 import BestsellerSection from "../components/BestsellerSection";
 import CategoryNav from "../components/CategoryNav";
 import MenuPreview from "../components/MenuPreview";
@@ -13,9 +12,6 @@ const Home = () => {
     <main className="min-h-screen bg-[#FAF8F5]">
       {/* 1. Hero / Restaurant Intro */}
       <Hero />
-
-      {/* 2. Compact Search */}
-      <SearchSection />
 
       {/* 3. Bestsellers ("What people love") */}
       <BestsellerSection />

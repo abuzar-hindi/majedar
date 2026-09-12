@@ -1,12 +1,11 @@
-import React, { useContext, useState } from "react";
-import Title from "../components/Title";
+import { useContext, useState } from "react";
 import CartTotal from "../components/CartTotal";
 import { ShopContext } from "../contexts/ShopContext";
 import QRCode from "qrcode";
 import { assets } from "../assets/assets";
 
 const PlaceOrder = () => {
-  const [method, setMethod] = useState("cod");
+  const [method, setMethod] = useState("gpay");
 
   const { cartItems, getCartAmount, deliveryFee, products } =
     useContext(ShopContext);
@@ -50,7 +49,7 @@ const PlaceOrder = () => {
   };
 
   const sendWhatsAppOrder = (orderId, paymentStatus) => {
-    let message = `🍽️ *New Order*\n\n`;
+    let message = `*New Order*\n\n`;
 
     message += `*Order ID:* ${orderId}\n`;
     message += `*Order Type:* ${orderType}\n`;
@@ -80,7 +79,7 @@ const PlaceOrder = () => {
 
     message += `\n💰 *Total: ₹${getCartAmount() + deliveryFee}*`;
 
-    const phoneNumber = "917704886832"; // Merchant's WhatsApp number
+    const phoneNumber = "917905404619"; // Merchant's WhatsApp number
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
       message
     )}`;
@@ -145,7 +144,7 @@ const PlaceOrder = () => {
             <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
               Step 1 of 2
             </span>
-            <h2 className="font-serif text-2xl font-bold text-[#1B3B2B]">
+            <h2 className="font-hero text-2xl font-bold text-[#1B3B2B]">
               Delivery Details
             </h2>
           </div>
@@ -259,7 +258,7 @@ const PlaceOrder = () => {
               <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
                 Step 2 of 2
               </span>
-              <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
+              <h3 className="font-hero text-xl font-bold text-[#1B3B2B]">
                 Payment Method
               </h3>
             </div>

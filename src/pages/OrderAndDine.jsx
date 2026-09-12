@@ -59,11 +59,8 @@ const OrderAndDine = () => {
       {/* 1. Header Title & Top Search */}
       <div className="bg-white border-b border-stone-200/80 pt-8 pb-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center mb-6">
-          <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
-            Majedaar Restaurant
-          </span>
-          <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-[#1B3B2B]">
-            Full Restaurant Menu
+          <h1 className="font-hero text-3xl sm:text-4xl font-extrabold text-[#1B3B2B]">
+            Majedar Menu
           </h1>
         </div>
 
@@ -122,7 +119,7 @@ const OrderAndDine = () => {
       {/* 3. Menu Content Container */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8">
         <div className="flex items-center justify-between mb-6 pb-2 border-b border-stone-200">
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1B3B2B]">
+          <h2 className="font-hero text-xl sm:text-2xl font-bold text-[#1B3B2B]">
             {activeCategory === "All" ? "All Dishes" : activeCategory}
           </h2>
           <span className="text-xs font-semibold text-stone-500 bg-stone-200/60 px-3 py-1 rounded-full">

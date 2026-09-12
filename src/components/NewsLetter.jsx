@@ -16,7 +16,7 @@ const NewsLetter = () => {
         className="w-full sm:w-1/2 border pl-3 flex my-6 mx-auto items-center"
       >
         <input
-          className="w-full sm:flex-1 outline-none"
+          className="w-full sm:flex-1 outline-none bg-transparent text-sm text-gray-800 placeholder:text-gray-400"
           type="email"
           placeholder="Enter you query/message or complain here..."
           required

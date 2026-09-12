@@ -15,11 +15,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded bg-white text-[#11261B] flex items-center justify-center font-bold text-base font-serif">
-                M
-              </div>
-              <span className="font-serif font-bold text-white text-xl tracking-wider uppercase">
-                MAJEDAAR
+              <span className="font-hero font-bold text-white text-xl tracking-wider uppercase">
+                MAJEDAR
               </span>
             </div>
             <p className="text-xs text-stone-400 leading-relaxed">
@@ -54,7 +51,7 @@ const Footer = () => {
             <p className="text-stone-300">Open Daily: 11:00 AM – 11:30 PM</p>
             <p className="text-stone-400">Pickup, Dine-in & Direct Ordering</p>
             <p className="text-stone-400 mt-2">
-              Phone: <a href="tel:+918318378572" className="text-white underline">+91 8318378572</a>
+              Phone: <a href="tel:+917905404619" className="text-white underline">+91 7905404619</a>
             </p>
           </div>
 
@@ -72,7 +69,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-stone-800/80 pt-6 text-center text-xs text-stone-500">
-          © {new Date().getFullYear()} MAJEDAAR RESTAURANT — All rights reserved.
+          © {new Date().getFullYear()} MAJEDAR RESTAURANT — All rights reserved.
         </div>
       </div>
     </footer>

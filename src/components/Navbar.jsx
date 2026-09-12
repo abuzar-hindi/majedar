@@ -21,12 +21,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-3.5">
         {/* Left: Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-md bg-[#1B3B2B] text-[#FAF8F5] flex items-center justify-center font-bold text-lg tracking-wider font-serif">
-            M
-          </div>
           <div className="flex flex-col">
-            <span className="font-serif font-bold text-xl text-[#1B3B2B] tracking-wider leading-none uppercase">
-              Majedaar
+            <span className="font-hero font-bold text-xl text-[#1B3B2B] tracking-wider leading-none uppercase">
+              Majedar
             </span>
             <span className="text-[9px] font-semibold text-[#5A6561] tracking-[0.2em] uppercase mt-0.5">
               Restaurant
