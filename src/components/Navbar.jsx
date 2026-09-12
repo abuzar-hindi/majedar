@@ -7,150 +7,186 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const { setShowSearch, getCartCounts, navigate } = useContext(ShopContext);
 
+  const scrollToMenu = () => {
+    const el = document.getElementById("ordering-menu");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
-    <div className="max-w-7xl mx-auto w-full flex items-center justify-between py-5">
-      <div className="flex items-center gap-4">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-orange-500 text-white flex items-center justify-center font-bold">
-            MD
+    <header className="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-stone-200/80 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-3.5">
+        {/* Left: Brand Logo */}
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-md bg-[#1B3B2B] text-[#FAF8F5] flex items-center justify-center font-bold text-lg tracking-wider font-serif">
+            M
+          </div>
+          <div className="flex flex-col">
+            <span className="font-serif font-bold text-xl text-[#1B3B2B] tracking-wider leading-none uppercase">
+              Majedaar
+            </span>
+            <span className="text-[9px] font-semibold text-[#5A6561] tracking-[0.2em] uppercase mt-0.5">
+              Restaurant
+            </span>
           </div>
         </Link>
-      </div>
 
-      <nav className="hidden sm:flex gap-6 text-sm text-gray-700 items-center">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `flex items-center gap-1 ${isActive ? "text-orange-500 font-semibold" : "hover:text-orange-500"}`
-          }
-        >
-          Home
-        </NavLink>
+        {/* Center: Minimal Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-7 text-xs font-semibold uppercase tracking-wider text-stone-700">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `transition-colors ${isActive ? "text-[#1B3B2B] font-extrabold" : "hover:text-[#1B3B2B]"}`
+            }
+          >
+            Home
+          </NavLink>
 
-        <NavLink
-          to="/orderanddine"
-          className={({ isActive }) =>
-            `${isActive ? "text-orange-500 font-semibold" : "hover:text-orange-500"}`
-          }
-        >
-          Order & Dine
-        </NavLink>
+          <NavLink
+            to="/orderanddine"
+            className={({ isActive }) =>
+              `transition-colors ${isActive ? "text-[#1B3B2B] font-extrabold" : "hover:text-[#1B3B2B]"}`
+            }
+          >
+            Order & Dine
+          </NavLink>
 
-        <NavLink
-          to="/about"
-          className={({ isActive }) =>
-            `${isActive ? "text-orange-500 font-semibold" : "hover:text-orange-500"}`
-          }
-        >
-          About
-        </NavLink>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              `transition-colors ${isActive ? "text-[#1B3B2B] font-extrabold" : "hover:text-[#1B3B2B]"}`
+            }
+          >
+            Contact
+          </NavLink>
+        </nav>
 
-        <NavLink
-          to="/contact"
-          className={({ isActive }) =>
-            `${isActive ? "text-orange-500 font-semibold" : "hover:text-orange-500"}`
-          }
-        >
-          Contact
-        </NavLink>
-
-        <NavLink
-          to="/reserve-table"
-          className={({ isActive }) =>
-            `${isActive ? "text-orange-500 font-semibold" : "hover:text-orange-500 bg-slate-100 px-3 py-1 rounded-md"}`
-          }
-        >
-          Reserve a Table
-        </NavLink>
-      </nav>
-
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => {
-            setShowSearch(true);
-            navigate("/orderanddine");
-          }}
-          className="p-2 rounded-md hover:bg-gray-100"
-        >
-          <img src={assets.search_icon} className="w-5" alt="search" />
-        </button>
-
-        <Link to="/cart" className="relative">
-          <button className="p-2 rounded-md hover:bg-gray-100">
-            <img src={assets.cart_icon} className="w-5" alt="cart" />
+        {/* Right: Actions (Search, Cart, Order Now, Mobile Toggle) */}
+        <div className="flex items-center gap-2.5 sm:gap-4">
+          <button
+            onClick={() => {
+              setShowSearch(true);
+              const searchInput = document.getElementById("homepage-search-input");
+              if (searchInput) {
+                searchInput.focus();
+              } else {
+                navigate("/");
+              }
+            }}
+            className="p-2 rounded-full text-stone-600 hover:text-[#1B3B2B] hover:bg-stone-200/60 transition-colors"
+            title="Search dishes"
+            aria-label="Search dishes"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </button>
-          <span className="absolute -right-1 -bottom-1 inline-flex items-center justify-center bg-black text-white text-xs w-5 h-5 rounded-full">
-            {getCartCounts()}
-          </span>
-        </Link>
 
-        <button
-          onClick={() => setVisible(true)}
-          className="p-2 rounded-md sm:hidden hover:bg-gray-100"
+          <Link to="/cart" className="relative p-2 rounded-full text-stone-600 hover:text-[#1B3B2B] hover:bg-stone-200/60 transition-colors" aria-label="Cart">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            {getCartCounts() > 0 && (
+              <span className="absolute top-1 right-1 inline-flex items-center justify-center bg-[#C85A17] text-white text-[10px] font-bold w-4 h-4 rounded-full">
+                {getCartCounts()}
+              </span>
+            )}
+          </Link>
+
+          <button
+            onClick={scrollToMenu}
+            className="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#1B3B2B] text-white text-xs font-bold tracking-wide uppercase hover:bg-[#11261B] active:scale-95 transition-all shadow-2xs"
+          >
+            Order Now
+          </button>
+
+          <button
+            onClick={() => setVisible(true)}
+            className="p-2 rounded-lg md:hidden text-stone-600 hover:bg-stone-200/60 transition-colors"
+            aria-label="Toggle Navigation Menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile Navigation Drawer */}
+        <div
+          className={`fixed z-50 top-0 right-0 h-full bg-[#FAF8F5] shadow-xl transition-all duration-300 ${
+            visible ? "w-72 translate-x-0" : "w-0 translate-x-full"
+          } overflow-hidden`}
         >
-          <img src={assets.menu_icon} className="w-5" alt="menu" />
-        </button>
-      </div>
+          <div className="flex flex-col h-full text-stone-800 p-5">
+            <div className="flex items-center justify-between pb-4 border-b border-stone-200">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded bg-[#1B3B2B] text-white flex items-center justify-center font-bold text-sm">
+                  M
+                </div>
+                <span className="font-bold text-sm text-[#1B3B2B]">MAJEDAAR</span>
+              </div>
+              <button
+                onClick={() => setVisible(false)}
+                className="p-1 rounded-md text-stone-500 hover:text-stone-800"
+                aria-label="Close Menu"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-      <div
-        className={`fixed z-50 top-0 right-0 h-full bg-white shadow-lg transition-transform transform ${visible ? "translate-x-0 w-72" : "translate-x-full w-0"}`}
-      >
-        <div className="flex flex-col text-gray-700 h-full">
-          <div className="flex items-center justify-between p-4 border-b">
-            <button
-              onClick={() => setVisible(false)}
-              className="flex items-center gap-3 text-sm text-gray-600"
-            >
-              <img
-                className="h-4 rotate-180"
-                src={assets.dropdown_icon}
-                alt=""
-              />
-              <span>Close</span>
-            </button>
+            <nav className="flex-1 pt-4 flex flex-col gap-1 text-sm font-medium">
+              <NavLink
+                onClick={() => setVisible(false)}
+                className="py-2.5 px-3 rounded-lg hover:bg-stone-200/60 text-stone-700"
+                to="/"
+              >
+                Home
+              </NavLink>
+              <NavLink
+                onClick={() => setVisible(false)}
+                className="py-2.5 px-3 rounded-lg hover:bg-stone-200/60 text-stone-700"
+                to="/orderanddine"
+              >
+                Order & Dine
+              </NavLink>
+              <NavLink
+                onClick={() => setVisible(false)}
+                className="py-2.5 px-3 rounded-lg hover:bg-stone-200/60 text-stone-700"
+                to="/contact"
+              >
+                Contact
+              </NavLink>
+              <NavLink
+                onClick={() => setVisible(false)}
+                className="py-2.5 px-3 rounded-lg hover:bg-stone-200/60 text-stone-700"
+                to="/reserve-table"
+              >
+                Reserve a Table
+              </NavLink>
+            </nav>
+
+            <div className="pt-4 border-t border-stone-200">
+              <button
+                onClick={() => {
+                  setVisible(false);
+                  scrollToMenu();
+                }}
+                className="w-full py-2.5 rounded-lg bg-[#1B3B2B] text-white text-xs font-bold uppercase tracking-wider text-center"
+              >
+                Order Now
+              </button>
+            </div>
           </div>
-
-          <nav className="flex-1 overflow-auto p-4 flex flex-col gap-2">
-            <NavLink
-              onClick={() => setVisible(false)}
-              className="text-sm py-2 pl-3 rounded hover:bg-gray-100"
-              to="/"
-            >
-              Home
-            </NavLink>
-            <NavLink
-              onClick={() => setVisible(false)}
-              className="text-sm py-2 pl-3 rounded hover:bg-gray-100"
-              to="/orderanddine"
-            >
-              Order & Dine
-            </NavLink>
-            <NavLink
-              onClick={() => setVisible(false)}
-              className="text-sm py-2 pl-3 rounded hover:bg-gray-100"
-              to="/about"
-            >
-              About
-            </NavLink>
-            <NavLink
-              onClick={() => setVisible(false)}
-              className="text-sm py-2 pl-3 rounded hover:bg-gray-100"
-              to="/contact"
-            >
-              Contact
-            </NavLink>
-            <NavLink
-              onClick={() => setVisible(false)}
-              className="text-sm py-2 pl-3 rounded hover:bg-gray-100"
-              to="/reserve-table"
-            >
-              Reserve a Table
-            </NavLink>
-          </nav>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 
 export default Navbar;
+

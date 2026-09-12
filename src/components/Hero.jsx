@@ -2,92 +2,55 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
+  const scrollToMenu = () => {
+    const element = document.getElementById("homepage-menu-preview");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <div
-      id="home"
-      className="relative bg-cover bg-center"
-      style={{
-        background: "url(/images/bg-hero.jpg) norepeat center center/cover",
-        backgroundColor: "#0F172B",
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent" />
-
-      <div className="relative max-w-7xl mx-auto px-6 py-6 sm:py-12 lg:py-20">
-        <div className="text-center sm:text-left text-white mb-2 text-xs lg:text-sm">
-          <span className="inline-block rounded-full bg-orange-50 text-orange-500 px-3 py-1 font-medium">
-            Open: 11:00 AM — 11:30 PM
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
-          <div className="space-y-2 sm:space-y-6">
-            <h1 className="text-2xl text-center sm:text-left sm:text-4xl lg:text-6xl font-extrabold leading-tight text-white">
-              Welcome to
-              <br />
-              <span className="text-[#FEA116] tracking-wider">
-                MANNAT DARBAAR
-              </span>
-            </h1>
-
-            <p className="text-gray-200 max-w-xl text-center sm:text-left text-sm lg:text-base">
-              Where Restaurant & Cafe merge under one roof — exceptional service
-              and carefully crafted dishes for every occasion.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4">
-              <Link
-                to="/orderanddine"
-                className="inline-block w-full sm:w-auto"
-              >
-                <button className="w-full sm:w-auto px-6 py-2 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold shadow hover:from-orange-500 hover:to-orange-600 transition">
-                  Order / Pick-up
-                </button>
-              </Link>
-
-              <Link
-                to="/reserve-table"
-                className="inline-block w-full sm:w-auto"
-              >
-                <button className="w-full sm:w-auto px-6 py-2 rounded-lg bg-white text-gray-800 font-semibold shadow-sm hover:shadow-md transition">
-                  Reserve a Table
-                </button>
-              </Link>
-            </div>
-
-            <div className="flex gap-3 items-center mt-4 justify-center sm:justify-start">
-              <a
-                href="tel:+919236359327"
-                className="inline-block px-4 py-2 rounded-md bg-[#FEA116] text-white font-medium"
-              >
-                Call Now
-              </a>
-              <button
-                onClick={() => scrollToSection("menu")}
-                className="inline-block px-4 py-2 rounded-md border border-[#FEA116] text-[#FEA116] bg-transparent"
-              >
-                View Menu
-              </button>
-            </div>
+    <section className="bg-[#FAF8F5] pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-stone-200/60 text-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto flex flex-col items-center">
+          {/* 1. Opening Status Badge */}
+          <div className="mb-5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E3EFE8] text-[#1B3B2B] text-xs font-semibold tracking-wide">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#1B3B2B]"></span>
+            <span>Open today • 11:00 AM – 11:30 PM</span>
           </div>
 
-          <div className="flex justify-center lg:justify-end">
-            <img
-              src="/images/hero.png"
-              className="w-[280px] sm:w-[420px] lg:w-[520px] object-cover rounded-3xl shadow-2xl"
-              alt="Restaurant Hero"
-            />
+          {/* 2. Main Title (Cinzel - Bold, Tall, Regal, Zero Clipping) */}
+          <h1 className="font-hero font-bold text-[clamp(1.75rem,5.2vw,4.5rem)] text-[#11261B] tracking-wider uppercase leading-tight py-1.5 mb-3 text-center overflow-visible">
+            MAJEDAAR RESTAURANT
+          </h1>
+
+          {/* 3. Sub-heading */}
+          <p className="text-[#C85A17] font-semibold text-xs sm:text-sm tracking-[0.2em] uppercase mb-5">
+            Restaurant in Ayodhya
+          </p>
+
+          {/* 4. Short Description */}
+          <p className="text-stone-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed font-normal mb-8">
+            Freshly prepared food, simple ordering, straight from our kitchen.
+          </p>
+
+          {/* 5. CTA Actions */}
+          <div className="flex flex-wrap justify-center gap-3.5">
+            <Link to="/orderanddine">
+              <button className="px-8 py-3.5 rounded-full bg-[#1B3B2B] hover:bg-[#11261B] text-white text-xs sm:text-sm font-bold uppercase tracking-wider active:scale-95 transition-all shadow-2xs">
+                Order Now
+              </button>
+            </Link>
+            <button
+              onClick={scrollToMenu}
+              className="px-7 py-3.5 rounded-full bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-2xs"
+            >
+              Explore Menu
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

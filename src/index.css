@@ -1,182 +1,112 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cinzel:wght@600;700;800;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;0,800;1,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Reserve Table CSS */
-.input {
-  @apply w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-orange-400;
-}
-
-/* ---------------------- THEME COLORS & VARIABLES ---------------------- */
-
 :root {
-  --primary: #fea116;
-  --light: #f1f8ff;
-  --dark: #0f172b;
+  --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Bodoni Moda", Georgia, serif;
+  --font-heading: "Cormorant Garamond", Georgia, serif;
+  --font-hero: "Cinzel", Georgia, serif;
+  --bg-warm: #FAF8F5;
+  --bg-sage: #F2F7F4;
+  --forest-primary: #1B3B2B;
+  --forest-dark: #11261B;
+  --accent-warm: #C85A17;
+  --text-main: #1C2421;
+  --text-muted: #5A6561;
 }
 
-/* ---------------------- ANIMATIONS ---------------------- */
-
-@keyframes imgRotate {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* ---------------------- CROSS-BROWSER FIXES ---------------------- */
 html {
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Reserve scrollbar gutter to avoid layout shifts across browsers */
-  scrollbar-gutter: stable;
+  background-color: var(--bg-warm);
+  color: var(--text-main);
+  scroll-behavior: smooth;
   box-sizing: border-box;
 }
+
 *, *::before, *::after {
   box-sizing: inherit;
 }
 
-
-@keyframes scrollingImages {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-10px);
-  }
+body {
+  background-color: var(--bg-warm);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
-@keyframes pulse-border {
-  0% {
-    transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
-    opacity: 0;
-  }
+/* Hide scrollbar for horizontal category scroll while allowing scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* ---------------------- GLOBAL COMPONENT STYLES ---------------------- */
+.input {
+  @apply w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] bg-white transition-colors;
+}
 
-@layer components {
-  .section-title {
-    @apply relative inline-block;
+/* ---------------------- CUSTOM MINIMAL TOAST STYLING ---------------------- */
+.Toastify__toast-container {
+  padding: 1rem;
+  width: auto;
+  max-width: 400px;
+}
+
+.Toastify__toast {
+  background-color: #1B3B2B !important;
+  color: #FAF8F5 !important;
+  border-radius: 9999px !important;
+  padding: 0.625rem 1.25rem !important;
+  box-shadow: 0 10px 25px -5px rgba(27, 59, 43, 0.25) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  min-height: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.Toastify__toast-body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.Toastify__close-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+  opacity: 1 !important;
+  align-self: center !important;
+}
+
+.Toastify__progress-bar {
+  background: #C85A17 !important;
+}
+
+@layer utilities {
+  .bg-warm-bg {
+    background-color: #FAF8F5;
   }
-
-  .section-title::before {
-    content: "";
-    @apply absolute w-[45px] h-0.5 -left-[55px] top-1/2 -translate-y-1/2;
-    background: var(--primary);
+  .bg-sage-bg {
+    background-color: #F2F7F4;
   }
-
-  .section-title::after {
-    content: "";
-    @apply absolute w-[45px] h-0.5 -right-[55px] top-1/2 -translate-y-1/2;
-    background: var(--primary);
+  .text-forest {
+    color: #1B3B2B;
   }
-
-  .section-title.text-start::before,
-  .section-title.text-end::after {
-    @apply hidden;
+  .bg-forest {
+    background-color: #1B3B2B;
   }
-
-  .service-item {
-    @apply shadow-[0_0_45px_rgba(0,0,0,0.08)] transition-all duration-500;
+  .border-forest {
+    border-color: #1B3B2B;
   }
-
-  .service-item:hover {
-    background: var(--primary);
+  .text-accent {
+    color: #C85A17;
   }
-
-  .service-item:hover * {
-    @apply text-light;
-    color: var(--light) !important;
-  }
-
-  .hero-img-rotate {
-    animation: imgRotate 50s linear infinite;
-  }
-
-  .scrolling-hero-image {
-    animation: scrollingImages 2s ease-in-out infinite alternate;
-  }
-
-  /* Button Styles */
-  .btn {
-    @apply font-semibold uppercase transition-all duration-500;
-  }
-
-  .btn-primary {
-    background: var(--primary);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    @apply opacity-90;
-  }
-
-  /* Navbar Styles */
-  .navbar {
-    @apply bg-transparent transition-all duration-500;
-  }
-
-  .sticky-top {
-    background: var(--dark) !important;
-  }
-
-  /* Hero Header */
-  .hero-header {
-    background:
-      linear-gradient(rgba(15, 23, 43, 0.9), rgba(15, 23, 43, 0.9)),
-      url(/images/bg-hero.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  /* Gallery hover effect */
-  .gallery-item {
-    @apply overflow-hidden rounded transition-all duration-500;
-  }
-
-  .gallery-item img {
-    @apply transition-transform duration-500;
-  }
-
-  .gallery-item:hover img {
-    @apply scale-110;
-  }
-
-  /* Testimonial Item */
-  .testimonial-item {
-    @apply transition-all duration-500;
-  }
-
-  .testimonial-item:hover {
-    background: var(--primary) !important;
-    border-color: var(--primary) !important;
-  }
-
-  .testimonial-item:hover * {
-    color: var(--light) !important;
-  }
-
-  /* Text Primary Color */
-  .text-primary {
-    color: var(--primary);
-  }
-
-  .bg-primary {
-    background: var(--primary);
-  }
-
-  .text-light {
-    color: var(--light);
-  }
-
-  .text-dark {
-    color: var(--dark);
+  .bg-accent {
+    background-color: #C85A17;
   }
 }

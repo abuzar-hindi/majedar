@@ -1,403 +1,216 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import { ShopContext } from "../contexts/ShopContext";
 import { assets } from "../assets/assets";
-import Title from "../components/Title";
-import ProductItem from "../components/ProductItem";
-import { Link } from "react-router-dom";
 
-const Collection = () => {
-  const { products, search, showSearch } = useContext(ShopContext);
-  const [showFilter, setShowFilter] = useState(false);
-  const [filterProducts, setFilterProducts] = useState([]);
-  // top-level diet categories (values: "Veg", "Non-Veg")
-  const [category, setCategory] = useState([]);
-  // product-level subcategories (derived from product.category, e.g. "Biryani", "Chinese Starter")
-  const [subCategory, setSubCategory] = useState([]);
-  // spice-level filters (mild / medium / high)
-  const [spiceLevelFilter, setSpiceLevelFilter] = useState([]);
-  const [sortType, setSortType] = useState("relevant");
-  const [bestsellerOnly, setBestsellerOnly] = useState(false);
+const CATEGORIES = [
+  "All",
+  "Breakfast",
+  "South Indian",
+  "Tea & Coffee",
+  "Momos",
+  "Maggi",
+  "Chinese",
+  "Pasta",
+  "Rice & Biryani",
+  "Burgers",
+  "Sweets",
+  "Dal",
+  "Main Course",
+  "Roti & Papad",
+  "Pizza",
+  "Thali",
+];
 
-  const [orderType, setOrderType] = useState(
-    localStorage.getItem("orderType") || "Home Delivery",
-  );
+const OrderAndDine = () => {
+  const { products, currency, addToCart, search, setSearch } = useContext(ShopContext);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedTypeMap, setSelectedTypeMap] = useState({});
 
-  // dynamically compute subcategories available for the selected top-level category(ies)
-  const availableSubcategories = useMemo(() => {
-    const s = new Set();
-    products.forEach((p) => {
-      if (category.length && !category.includes(p.mainCategory)) return;
-      if (p.subCategory) s.add(p.subCategory);
+  const filteredProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
+
+    return products.filter((item) => {
+      // Search filter
+      if (search && search.trim() !== "") {
+        const query = search.toLowerCase().trim();
+        const matchesName = item.name?.toLowerCase().includes(query);
+        const matchesCategory = item.category?.toLowerCase().includes(query);
+        const matchesDesc = item.description?.toLowerCase().includes(query);
+        if (!matchesName && !matchesCategory && !matchesDesc) return false;
+      }
+
+      // Category filter
+      if (activeCategory === "All") return true;
+
+      const catLower = activeCategory.toLowerCase().trim();
+      const itemCatLower = (item.category || "").toLowerCase().trim();
+
+      return itemCatLower.includes(catLower) || catLower.includes(itemCatLower);
     });
-    return Array.from(s).sort();
-  }, [products, category]);
+  }, [products, activeCategory, search]);
 
-  const toggleCategory = (e) => {
-    {
-      /* e is an event that triggers when user click on UI element to select/deselect category */
-    }
-    if (category.includes(e.target.value)) {
-      {
-        /* 'e.target.value' gives the selected value from the user, in this case, it'll give the selected category*/
-      }
-      {
-        /* EG: "category.includes(value)" category is an array - Values should be check inside this array, and "e.target.value" is a value that developer checks wheather */
-      }
-      {
-        /* "includes" --> checks if the value is in the list or not and returns 'True' or 'False */
-      }
-
-      setCategory((prev) => prev.filter((item) => item !== e.target.value));
-      {
-        /* "filter" makes a new array while "prev" have the previous list and filter is going to update it by Item (that's deselected) means the value that user deselects is going to stored in the 'item' and it'll update the prev means remove the deselected (now) category. */
-      }
-    } else {
-      setCategory((prev) => [...prev, e.target.value]);
-      {
-        /* else Took the previous array (...prev), and Add the new selected category in the previous list */
-      }
-    }
-  };
-
-  // toggle product subcategory (e.g. "Biryani", "Chinese Starter")
-  const toggleSubCategory = (e) => {
-    const v = e.target.value;
-    setSubCategory((prev) =>
-      prev.includes(v) ? prev.filter((i) => i !== v) : [...prev, v],
-    );
-  };
-
-  // toggle spice-level filter (mild / medium / high)
-  const toggleSpiceLevel = (e) => {
-    const v = e.target.value;
-    setSpiceLevelFilter((prev) =>
-      prev.includes(v) ? prev.filter((i) => i !== v) : [...prev, v],
-    );
-  };
-
-  const applyFilter = () => {
-    let productsCopy = products.slice();
-
-    // 1) top-level diet category filter (Veg / Non-Veg)
-    if (category.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        category.includes(item.mainCategory),
-      );
-    }
-
-    // 2) subCategory (e.g. "Biryani", "Chinese Starter")
-    if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        subCategory.includes(item.subCategory),
-      );
-    }
-
-    // 3) spice-level filter (mild/medium/high)
-    if (spiceLevelFilter.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        spiceLevelFilter.includes(item.spiceLevel),
-      );
-    }
-
-    // 3b) bestseller only
-    if (bestsellerOnly) {
-      productsCopy = productsCopy.filter((item) => item.bestseller);
-    }
-
-    // 4) search
-    if (search && showSearch) {
-      productsCopy = productsCopy.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
-
-    setFilterProducts(productsCopy);
-  };
-
-  {
-    /* --------- Custom Event Handler "const sortProducts = () =>" VS useEffect ------- 
-    here below, sortProducts is an event handler which calls when user given an input or take an action like user adds an item in cart by clicking on ADD TO CART button.....
-    whereas
-    useEffect is a lifecycle hook that calls or triggers automatically to component mount, update or to handle side effects when a component renders.
-  */
-  }
-
-  const getPriceForSort = (item) =>
-    typeof item.lowestPrice === "number" && isFinite(item.lowestPrice)
-      ? item.lowestPrice
-      : Infinity;
-
-  const sortProducts = () => {
-    const copy = [...filterProducts];
-
-    if (sortType === "low-high") {
-      copy.sort((a, b) => getPriceForSort(a) - getPriceForSort(b));
-      setFilterProducts(copy);
-      return;
-    }
-
-    if (sortType === "high-low") {
-      copy.sort((a, b) => getPriceForSort(b) - getPriceForSort(a));
-      setFilterProducts(copy);
-      return;
-    }
-
-    // 'relevant' — re-apply base filters (keeps original order)
-    applyFilter();
-  };
-
-  // auto-run sort when sortType changes
-  useEffect(() => {
-    sortProducts();
-  }, [sortType]);
-
-  // If filters change while a non-default sort is active, re-run the sort
-  useEffect(() => {
-    if (sortType === "low-high" || sortType === "high-low") {
-      sortProducts();
-    }
-  }, [filterProducts]);
-
-  useEffect(() => {
-    applyFilter();
-  }, [
-    category,
-    subCategory,
-    spiceLevelFilter,
-    showSearch,
-    search,
-    products,
-    bestsellerOnly,
-  ]);
-
-  // when main category changes, remove any selected subcategories that are no longer available
-  useEffect(() => {
-    setSubCategory((prev) =>
-      prev.filter((sc) =>
-        products.some(
-          (p) =>
-            p.subCategory === sc &&
-            (category.length ? category.includes(p.mainCategory) : true),
-        ),
-      ),
-    );
-  }, [category, products]);
+  const getImg = (item) =>
+    item.images?.[0] ||
+    assets.placeholder_food ||
+    "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=400&q=80";
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 pt-12 border-t border-gray-100 max-w-7xl mx-auto px-4 sm:px-6">
-      {/* ----------------------------------- Left Side ----------------------------------- */}
+    <div className="min-h-screen bg-[#FAF8F5] pb-16">
+      {/* 1. Header Title & Top Search */}
+      <div className="bg-white border-b border-stone-200/80 pt-8 pb-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center mb-6">
+          <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
+            Majedaar Restaurant
+          </span>
+          <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-[#1B3B2B]">
+            Full Restaurant Menu
+          </h1>
+        </div>
 
-      <aside className="w-full lg:w-72">
-        <div className="sticky top-24 bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <div
-            className="flex items-center justify-between cursor-pointer"
-            onClick={() => setShowFilter(!showFilter)}
+        {/* Compact Toast-style Search Bar */}
+        <div className="max-w-md mx-auto relative">
+          <svg
+            className="w-4 h-4 absolute left-3.5 top-3 text-stone-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <p className="text-lg font-semibold tracking-wide">Filters</p>
-            <img
-              className={`h-3 md:hidden ${showFilter ? "rotate-90" : ""}`}
-              src={assets.dropdown_icon}
-              alt=""
-            />
-          </div>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search dishes, cuisines..."
+            className="w-full pl-10 pr-8 py-2.5 bg-[#FAF8F5] text-stone-800 text-xs sm:text-sm placeholder-stone-400 border border-stone-200/90 rounded-full focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all shadow-2xs"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3.5 top-3 text-stone-400 hover:text-stone-600"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
 
-          <div className={`${showFilter ? "" : "hidden"} sm:block mt-4`}>
-            <p className="mb-3 text-sm font-medium text-gray-500">Diet</p>
-            <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-              <div className="flex flex-col gap-3 text-sm text-gray-700">
-                <label className="flex items-center gap-3 font-medium">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    value={"Veg"}
-                    checked={category.includes("Veg")}
-                    onChange={toggleCategory}
+      {/* 2. Sticky Horizontal Category Navigation Bar */}
+      <div className="sticky top-[65px] z-30 bg-white border-b border-stone-200/90 py-3 px-4 sm:px-6 shadow-2xs">
+        <div className="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+          {CATEGORIES.map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`whitespace-nowrap px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full transition-all ${
+                  isActive
+                    ? "bg-[#1B3B2B] text-white shadow-2xs"
+                    : "text-stone-600 hover:text-[#1B3B2B] hover:bg-stone-100"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Menu Content Container */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8">
+        <div className="flex items-center justify-between mb-6 pb-2 border-b border-stone-200">
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1B3B2B]">
+            {activeCategory === "All" ? "All Dishes" : activeCategory}
+          </h2>
+          <span className="text-xs font-semibold text-stone-500 bg-stone-200/60 px-3 py-1 rounded-full">
+            {filteredProducts.length} item{filteredProducts.length === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        {/* Compact Scannable List Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredProducts.map((item) => {
+            const defaultType =
+              selectedTypeMap[item._id] ||
+              (item.types && item.types[0]?.label) ||
+              "Full";
+            const selectedTypeObj = item.types?.find((t) => t.label === defaultType);
+            const displayPrice = selectedTypeObj ? selectedTypeObj.price : (item.price || 0);
+
+            return (
+              <div
+                key={item._id}
+                className="bg-white rounded-2xl border border-stone-200/80 p-3.5 hover:border-stone-300 transition-all flex gap-3.5 items-center justify-between shadow-2xs"
+              >
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden flex-none bg-stone-100 border border-stone-100 relative">
+                  <img
+                    src={getImg(item)}
+                    alt={`${item.name} at Majedaar Restaurant`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
                   />
-                  Veg
-                </label>
+                  <div className="absolute top-1 left-1 bg-white/95 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase">
+                    <span className={item.isVeg ? "text-emerald-700" : "text-rose-700"}>
+                      {item.isVeg ? "Veg" : "Non-Veg"}
+                    </span>
+                  </div>
+                </div>
 
-                <label className="flex items-center gap-3 font-medium">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    value={"Non-Veg"}
-                    checked={category.includes("Non-Veg")}
-                    onChange={toggleCategory}
-                  />
-                  Non-Veg
-                </label>
-
-                <div className="mt-3">
-                  <p className="mb-2 text-sm font-medium text-gray-500">
-                    Subcategories
-                  </p>
-                  {availableSubcategories.length ? (
-                    <div className="grid grid-cols-1 gap-2 text-sm">
-                      {availableSubcategories.map((sc) => (
-                        <label
-                          key={sc}
-                          className="flex items-center gap-2 text-gray-700"
-                        >
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4"
-                            value={sc}
-                            checked={subCategory.includes(sc)}
-                            onChange={toggleSubCategory}
-                          />
-                          <span className="truncate">{sc}</span>
-                        </label>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-gray-400">
-                      Select a category to see subcategories
+                <div className="flex-1 min-w-0 flex flex-col justify-between h-full">
+                  <div>
+                    <h3 className="font-bold text-xs sm:text-sm text-[#11261B] truncate mb-0.5">
+                      {item.name}
+                    </h3>
+                    <p className="text-stone-400 text-[11px] line-clamp-2 mb-2 leading-tight">
+                      {item.description}
                     </p>
-                  )}
+                  </div>
+
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-xs sm:text-sm font-extrabold text-[#1B3B2B]">
+                      {currency}{displayPrice}
+                    </span>
+
+                    <div className="flex items-center gap-1.5">
+                      {item.types && item.types.length > 1 && (
+                        <select
+                          value={defaultType}
+                          onChange={(e) =>
+                            setSelectedTypeMap({
+                              ...selectedTypeMap,
+                              [item._id]: e.target.value,
+                            })
+                          }
+                          className="text-[11px] bg-stone-50 border border-stone-200 rounded-lg px-2 py-1 text-stone-700 focus:outline-none"
+                        >
+                          {item.types.map((t) => (
+                            <option key={t.label} value={t.label}>
+                              {t.label} (₹{t.price})
+                            </option>
+                          ))}
+                        </select>
+                      )}
+
+                      <button
+                        onClick={() => addToCart(item._id, defaultType)}
+                        className="px-3.5 py-1.5 rounded-full bg-[#1B3B2B] hover:bg-[#11261B] text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wider active:scale-95 transition-all flex items-center gap-1 shadow-2xs"
+                      >
+                        <span>ADD</span>
+                        <span className="text-xs leading-none">+</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-6">
-              <p className="mb-3 text-sm font-medium text-gray-500">
-                Preferences
-              </p>
-              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                <label className="flex gap-3 items-center text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    value={"mild"}
-                    checked={spiceLevelFilter.includes("mild")}
-                    onChange={toggleSpiceLevel}
-                  />
-                  Mild
-                </label>
-                <label className="flex gap-3 items-center text-sm text-gray-700 mt-2">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    value={"medium"}
-                    checked={spiceLevelFilter.includes("medium")}
-                    onChange={toggleSpiceLevel}
-                  />
-                  Medium
-                </label>
-                <label className="flex gap-3 items-center text-sm text-gray-700 mt-2">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    value={"high"}
-                    checked={spiceLevelFilter.includes("high")}
-                    onChange={toggleSpiceLevel}
-                  />
-                  High
-                </label>
-
-                <label className="flex gap-3 items-center mt-4 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4"
-                    checked={bestsellerOnly}
-                    onChange={() => setBestsellerOnly((s) => !s)}
-                  />
-                  Show Bestsellers Only
-                </label>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
-      </aside>
-
-      {/* ----------------------------------- Right Side ----------------------------------- */}
-
-      <main className="flex-1 w-full">
-        <div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <div className="flex items-center gap-3">
-                <Title text1={"ORDER &"} text2={"DINE"} />
-              </div>
-
-              <p className="text-sm text-gray-500 mt-1">
-                Premium curated menu — {filterProducts.length} item
-                {filterProducts.length !== 1 ? "s" : ""}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3 mt-4 sm:mt-0">
-              <select
-                onChange={(e) => setSortType(e.target.value)}
-                className="border border-gray-200 bg-white text-sm px-3 py-2 rounded-lg shadow-sm outline-none"
-              >
-                <option value="relevant">Sort by: Relevant</option>
-                <option value="low-high">Sort by: Low - High</option>
-                <option value="high-low">Sort by: High - Low</option>
-              </select>
-
-              <div className="inline-flex rounded-full bg-gray-100 p-1 border border-gray-200">
-                <button
-                  onClick={() => {
-                    setOrderType("Home Delivery");
-                    localStorage.setItem("orderType", "Home Delivery");
-                  }}
-                  className={`px-4 md:py-2 rounded-full text-sm font-medium transition ${
-                    orderType === "Home Delivery"
-                      ? "bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow"
-                      : "text-gray-700 hover:bg-white"
-                  }`}
-                >
-                  Home
-                </button>
-
-                <button
-                  onClick={() => {
-                    setOrderType("Pick-up");
-                    localStorage.setItem("orderType", "Pick-up");
-                  }}
-                  className={`px-4 md:py-2 rounded-full text-sm font-medium transition leading-tight ${
-                    orderType === "Pick-up"
-                      ? "bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow"
-                      : "text-gray-700 hover:bg-white leadings-tight"
-                  }`}
-                >
-                  Pick-up
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* ----------------------------------- Mapping of Products ----------------------------------- */}
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filterProducts.length > 0 ? (
-              filterProducts.map((item, index) => (
-                <ProductItem
-                  key={item._id || index}
-                  name={item.name}
-                  id={item._id}
-                  types={item.types}
-                  images={item.images}
-                />
-              ))
-            ) : (
-              <div className="col-span-full text-center text-gray-500 text-base py-20">
-                <p className="mb-4">
-                  We're working on it and will upload soon.
-                </p>
-                <Link
-                  className="bg-blue-700 text-white rounded-lg py-2 px-5 hover:bg-blue-800 transition ease-in-out mt-3 inline-block"
-                  to={"/"}
-                >
-                  Go to Home
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 };
 
-export default Collection;
+export default OrderAndDine;

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../contexts/ShopContext";
-import { assets } from "../assets/assets";
 import { useLocation } from "react-router-dom";
 
 const Searchbar = () => {
@@ -10,7 +9,6 @@ const Searchbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Show search only on Order & Dine page (and optionally on Home)
     if (location.pathname.includes("orderanddine") || location.pathname === "/") {
       setVisible(true);
     } else {
@@ -19,23 +17,38 @@ const Searchbar = () => {
   }, [location.pathname]);
 
   return showSearch && visible ? (
-    <div className="border border-b bg-gray-50 text-center">
-      <div className="inline-flex justify-center items-center border border-gray-400 px-5 py-2 my-5 mx-3 rounded-full w-3/4 sm:w-1/2">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="bg-inherit text-sm flex-1 outline-none"
-          type="text"
-          placeholder="Search"
-        />
-        <img className="w-4" src={assets.search_icon} alt="" />
+    <div className="bg-[#FAF8F5] border-b border-stone-200 py-3 px-4 transition-all">
+      <div className="max-w-xl mx-auto flex items-center gap-3">
+        <div className="relative flex-1 flex items-center">
+          <svg className="w-4 h-4 absolute left-4 text-stone-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-11 pr-10 py-2.5 bg-white text-stone-800 text-xs sm:text-sm placeholder-stone-400 border border-stone-200 rounded-full shadow-2xs focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+            type="text"
+            placeholder="Search dishes, cuisines..."
+            autoFocus
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3.5 text-stone-400 hover:text-stone-600"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+        <button
+          onClick={() => setShowSearch(false)}
+          className="text-xs font-bold text-stone-500 hover:text-stone-800 px-3 py-1.5 rounded-full hover:bg-stone-200/50 transition-colors"
+        >
+          Close
+        </button>
       </div>
-      <img
-        onClick={() => setShowSearch(false)}
-        className="inline w-3 cursor-pointer"
-        src={assets.cross_icon}
-        alt=""
-      />
     </div>
   ) : null;
 };

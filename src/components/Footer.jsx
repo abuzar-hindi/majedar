@@ -2,57 +2,77 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
+  const scrollToMenu = () => {
+    const element = document.getElementById("ordering-menu");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <footer className="w-full bg-slate-900 text-gray-200 pt-12 mt-12">
-      <div className="max-w-7xl mx-auto py-12 px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="w-full bg-[#11261B] text-stone-300 pt-12 pb-8 border-t border-stone-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           <div className="space-y-3">
-            <h4 className="font-semibold text-white text-lg mb-2">MANNAT DARBAAR</h4>
-            <p className="text-sm text-gray-300">Authentic flavors, warm hospitality.</p>
-            <div className="mt-4 flex flex-col gap-2">
-              <button onClick={(e) => { e.preventDefault(); scrollToSection('menu'); }} className="text-sm text-gray-300 hover:text-white text-left">Menu</button>
-              <Link to="/contact" className="text-sm text-gray-300 hover:text-white">Contact</Link>
-              <Link to="/about" className="text-sm text-gray-300 hover:text-white">About Us</Link>
-              <Link to="/orderanddine" className="text-sm text-gray-300 hover:text-white">Order & Dine</Link>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded bg-white text-[#11261B] flex items-center justify-center font-bold text-base font-serif">
+                M
+              </div>
+              <span className="font-serif font-bold text-white text-xl tracking-wider uppercase">
+                MAJEDAAR
+              </span>
+            </div>
+            <p className="text-xs text-stone-400 leading-relaxed">
+              Fresh, authentic Indian dining & online ordering. Quality ingredients, prepared daily.
+            </p>
+          </div>
+
+          <div className="space-y-2 text-xs">
+            <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-2">
+              Quick Links
+            </h4>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={scrollToMenu}
+                className="text-left text-stone-300 hover:text-white transition-colors"
+              >
+                Order Online
+              </button>
+              <Link to="/orderanddine" className="hover:text-white transition-colors">
+                Order & Dine
+              </Link>
+              <Link to="/contact" className="hover:text-white transition-colors">
+                Contact & Location
+              </Link>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="font-semibold text-white text-lg mb-2">Contact</h4>
-            <p className="text-sm"><a href="tel:+918318378572" className="hover:text-white">+91 8318378572</a></p>
-            <p className="text-sm"><b>Price Range:</b> ₹200–400 per person</p>
+          <div className="space-y-2 text-xs">
+            <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-2">
+              Hours & Info
+            </h4>
+            <p className="text-stone-300">Open Daily: 11:00 AM – 11:30 PM</p>
+            <p className="text-stone-400">Pickup, Dine-in & Direct Ordering</p>
+            <p className="text-stone-400 mt-2">
+              Phone: <a href="tel:+918318378572" className="text-white underline">+91 8318378572</a>
+            </p>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="font-semibold text-white text-lg mb-2">Opening Hours</h4>
-            <p className="text-sm">Monday - Sunday</p>
-            <p className="text-sm">11:00 AM - 11:30 PM</p>
-            <div className="mt-3 text-sm">
-              <p>Breakfast • Brunch • Lunch</p>
-              <p>Dinner • Dessert • Catering</p>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h6 className="text-white text-lg font-semibold mb-2">Highlights</h6>
-            <ul className="text-sm text-gray-300 space-y-1">
-              <li>Great Coffee/Tea</li>
-              <li>Restroom • Free Wi-fi</li>
-              <li>Outdoor Seating • High Chairs</li>
-              <li>Free Parking • Family Friendly</li>
+          <div className="space-y-2 text-xs">
+            <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-2">
+              Restaurant Highlights
+            </h4>
+            <ul className="space-y-1 text-stone-400">
+              <li>• Authentic Dum Biryanis</li>
+              <li>• Fresh Tandoori Breads & Kebabs</li>
+              <li>• Fast Takeout & Ordering</li>
+              <li>• Clean & Family-Friendly</li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} MANNAT DARBAAR — All rights reserved
+        <div className="border-t border-stone-800/80 pt-6 text-center text-xs text-stone-500">
+          © {new Date().getFullYear()} MAJEDAAR RESTAURANT — All rights reserved.
         </div>
       </div>
     </footer>

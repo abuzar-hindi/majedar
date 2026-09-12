@@ -82,7 +82,7 @@ const PlaceOrder = () => {
 
     const phoneNumber = "917704886832"; // Merchant's WhatsApp number
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message,
+      message
     )}`;
 
     window.open(whatsappURL, "_blank");
@@ -130,246 +130,292 @@ const PlaceOrder = () => {
 
   const getUpiLink = (amount, orderId) =>
     `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(
-      MERCHANT_NAME,
+      MERCHANT_NAME
     )}&am=${amount}&cu=INR&tn=Order%20${orderId}`;
 
   return (
-    <form
-      onSubmit={onSubmitHandler}
-      className="flex flex-col sm:flex-row justify-between  gao-4 sm:pt-14 pt-5 min-h-[80vh] border-t"
-    >
-      {/* ------------------------ Left Side ------------------------  */}
-
-      <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
-        <div className="flex text-xl my-3 sm:text-2xl">
-          <Title text1={"DELIVERY"} text2={"INFORMATION"} />
-        </div>
-
-        <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="firstName"
-            value={formData.firstName}
-            className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-            type="text"
-            placeholder="First Name"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="lastName"
-            value={formData.lastName}
-            className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-            type="text"
-            placeholder="Last Name"
-            required
-          />
-        </div>
-        <input
-          onChange={onChangeHandler}
-          name="email"
-          value={formData.email}
-          className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-          type="email"
-          placeholder="Email Address:"
-          required
-        />
-        <input
-          onChange={onChangeHandler}
-          name="street"
-          value={formData.street}
-          className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-          type="text"
-          placeholder="Street"
-          required
-        />
-        <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="city"
-            value={formData.city}
-            className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-            type="text"
-            placeholder="City"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="state"
-            value={formData.state}
-            className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-            type="text"
-            placeholder="State"
-            required
-          />
-        </div>
-        <div className="flex gap-3">
-          <input
-            onChange={onChangeHandler}
-            name="zipcode"
-            value={formData.zipcode}
-            className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-            type="Number"
-            placeholder="Zipcode"
-            required
-          />
-          <input
-            onChange={onChangeHandler}
-            name="country"
-            value={formData.country}
-            className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-            type="text"
-            placeholder="Country"
-            required
-          />
-        </div>
-        <input
-          onChange={onChangeHandler}
-          name="phone"
-          value={formData.phone}
-          className="border border-gray-300 rounded px-3.5 py-1.5 w-full"
-          type="Number"
-          placeholder="Phone"
-          required
-        />
-      </div>
-
-      {/* ------------------------ Right Side ------------------------  */}
-
-      <div className="sm:ml-6 mt-8">
-        <div className="mt-8 min-w-80">
-          <CartTotal />
-        </div>
-        {/* ------------------------ Payment Method Selection ------------------------  */}
-        <div className="mt-12">
-          <Title text1={"PAYMENT"} text2={"METHOD"} />
-
-          {/* -----------------------Button for GPay  ----------------------- */}
-
-          <div className="flex flex-col gap-4 lg:flex-row items-center justify-center">
-            <div
-              onClick={() => setMethod("gpay")}
-              className={`flex items-center gap-5 py-2 px-4 border cursor-pointer ${
-                method === "gpay" ? "border-green-600" : ""
-              }`}
-            >
-              <span
-                className={`w-4 h-4 rounded-full border ${
-                  method === "gpay" ? "bg-green-600" : ""
-                }`}
-              ></span>
-
-              <img className="h-8" src={assets.google_pay} alt="GPay" />
-            </div>
-
-            {/* -----------------------Button for Phonepe ----------------------- */}
-
-            <div
-              onClick={() => setMethod("phonepe")}
-              className={`flex items-center gap-5 py-2 px-4 border cursor-pointer ${
-                method === "phonepe" ? "border-green-600" : ""
-              }`}
-            >
-              <span
-                className={`w-4 h-4 rounded-full border ${
-                  method === "phonepe" ? "bg-green-600" : ""
-                }`}
-              ></span>
-
-              <img className="h-8" src={assets.PhonePe} alt="PhonePe" />
-            </div>
-
-            {/* -----------------------Button for COD----------------------- */}
-
-            <div
-              onClick={() => setMethod("cod")}
-              className={`flex items-center gap-5 py-3.5 px-4 border cursor-pointer ${
-                method === "cod" ? "border-green-600" : ""
-              }`}
-            >
-              <span
-                className={`w-4 h-4 rounded-full border ${
-                  method === "cod" ? "bg-green-600" : ""
-                }`}
-              ></span>
-
-              <p className="text-sm font-medium">CASH ON DELIVERY</p>
-            </div>
+    <div className="min-h-screen bg-[#FAF8F5] pt-8 pb-16 px-4 sm:px-6 lg:px-8">
+      <form
+        onSubmit={onSubmitHandler}
+        className="max-w-6xl mx-auto flex flex-col lg:flex-row justify-between gap-8"
+      >
+        {/* ------------------------ Left Side: Delivery Information ------------------------  */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-2xs">
+          <div className="mb-6 pb-3 border-b border-stone-100">
+            <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
+              Step 1 of 2
+            </span>
+            <h2 className="font-serif text-2xl font-bold text-[#1B3B2B]">
+              Delivery Details
+            </h2>
           </div>
 
-          {showQR && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-white p-6 rounded-lg w-80 text-center">
-                <h2 className="text-lg font-semibold mb-4">
-                  Pay using {method === "gpay" ? "GPay" : "PhonePe"}
-                </h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                onChange={onChangeHandler}
+                name="firstName"
+                value={formData.firstName}
+                className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+                type="text"
+                placeholder="First Name"
+                required
+              />
+              <input
+                onChange={onChangeHandler}
+                name="lastName"
+                value={formData.lastName}
+                className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+                type="text"
+                placeholder="Last Name"
+                required
+              />
+            </div>
 
-                <img
-                  src={method === "gpay" ? assets.qr_code : assets.qr_code}
-                  alt="QR"
-                  className="mx-auto mb-4"
-                />
+            <input
+              onChange={onChangeHandler}
+              name="email"
+              value={formData.email}
+              className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+              type="email"
+              placeholder="Email Address"
+              required
+            />
 
-                <p className="text-sm text-gray-600 mb-4">
-                  Scan & complete payment, then click below
-                </p>
+            <input
+              onChange={onChangeHandler}
+              name="street"
+              value={formData.street}
+              className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+              type="text"
+              placeholder="Street Address"
+              required
+            />
 
-                {showQR && (
-                  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-80 text-center">
-                      <h2 className="text-lg font-semibold mb-2">Scan & Pay</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                onChange={onChangeHandler}
+                name="city"
+                value={formData.city}
+                className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+                type="text"
+                placeholder="City"
+                required
+              />
+              <input
+                onChange={onChangeHandler}
+                name="state"
+                value={formData.state}
+                className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+                type="text"
+                placeholder="State"
+                required
+              />
+            </div>
 
-                      <p className="text-sm mb-3">
-                        Order ID: <b>{currentOrderId}</b>
-                      </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                onChange={onChangeHandler}
+                name="zipcode"
+                value={formData.zipcode}
+                className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+                type="number"
+                placeholder="Zipcode"
+                required
+              />
+              <input
+                onChange={onChangeHandler}
+                name="country"
+                value={formData.country}
+                className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+                type="text"
+                placeholder="Country"
+                required
+              />
+            </div>
 
-                      {qrDataUrl && (
-                        <img
-                          src={qrDataUrl}
-                          alt="UPI QR"
-                          className="mx-auto mb-4"
-                        />
-                      )}
+            <input
+              onChange={onChangeHandler}
+              name="phone"
+              value={formData.phone}
+              className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-800 focus:outline-none focus:border-[#1B3B2B] focus:ring-1 focus:ring-[#1B3B2B] transition-all"
+              type="number"
+              placeholder="Phone Number"
+              required
+            />
+          </div>
+        </div>
 
-                      <p className="text-sm text-gray-600 mb-4">
-                        Amount & Order ID will auto-fill
-                      </p>
+        {/* ------------------------ Right Side: Order Summary & Payment Methods ------------------------  */}
+        <div className="w-full lg:w-[420px] space-y-6">
+          {/* Order Summary Card */}
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-2xs">
+            <CartTotal />
+          </div>
 
-                      <button
-                        onClick={() => {
-                          setShowQR(false);
-                          sendWhatsAppOrder(currentOrderId, "UPI Paid (QR)");
-                        }}
-                        className="bg-orange-400 w-full text-white px-6 py-2 rounded"
-                      >
-                        I’VE PAID
-                      </button>
-                      <button
-                        onClick={() => setShowQR(false)}
-                        className="relative right-0 border mt-2 w-full px-6 py-2 rounded hover:bg-gray-200"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
+          {/* Payment Method Selection Card */}
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200/90 shadow-2xs">
+            <div className="mb-5 pb-3 border-b border-stone-100">
+              <span className="text-[11px] font-bold text-[#C85A17] uppercase tracking-widest block mb-1">
+                Step 2 of 2
+              </span>
+              <h3 className="font-serif text-xl font-bold text-[#1B3B2B]">
+                Payment Method
+              </h3>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              {/* Button for GPay */}
+              <div
+                onClick={() => setMethod("gpay")}
+                className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  method === "gpay"
+                    ? "border-[#1B3B2B] bg-[#E3EFE8]/30 shadow-2xs"
+                    : "border-stone-200 hover:border-stone-300 bg-white"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                      method === "gpay"
+                        ? "border-[#1B3B2B] bg-[#1B3B2B]"
+                        : "border-stone-300"
+                    }`}
+                  >
+                    {method === "gpay" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    )}
+                  </span>
+                  <span className="text-xs font-bold text-stone-800">
+                    Google Pay
+                  </span>
+                </div>
+                <img className="h-6 object-contain" src={assets.google_pay} alt="GPay" />
+              </div>
+
+              {/* Button for PhonePe */}
+              <div
+                onClick={() => setMethod("phonepe")}
+                className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  method === "phonepe"
+                    ? "border-[#1B3B2B] bg-[#E3EFE8]/30 shadow-2xs"
+                    : "border-stone-200 hover:border-stone-300 bg-white"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                      method === "phonepe"
+                        ? "border-[#1B3B2B] bg-[#1B3B2B]"
+                        : "border-stone-300"
+                    }`}
+                  >
+                    {method === "phonepe" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    )}
+                  </span>
+                  <span className="text-xs font-bold text-stone-800">
+                    PhonePe UPI
+                  </span>
+                </div>
+                <img className="h-6 object-contain" src={assets.PhonePe} alt="PhonePe" />
+              </div>
+
+              {/* Button for Cash on Delivery */}
+              <div
+                onClick={() => setMethod("cod")}
+                className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  method === "cod"
+                    ? "border-[#1B3B2B] bg-[#E3EFE8]/30 shadow-2xs"
+                    : "border-stone-200 hover:border-stone-300 bg-white"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                      method === "cod"
+                        ? "border-[#1B3B2B] bg-[#1B3B2B]"
+                        : "border-stone-300"
+                    }`}
+                  >
+                    {method === "cod" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    )}
+                  </span>
+                  <span className="text-xs font-bold text-stone-800">
+                    Cash on Delivery
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  Pay at Door
+                </span>
               </div>
             </div>
-          )}
 
-          <div className="text-end w-full mt-8">
+            {/* Modal for QR Code */}
+            {showQR && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+                <div className="bg-white p-6 rounded-2xl w-full max-w-sm text-center shadow-xl border border-stone-200">
+                  <h3 className="text-base font-bold text-[#1B3B2B] mb-1">
+                    Scan & Pay with UPI
+                  </h3>
+                  <p className="text-xs text-stone-500 mb-3">
+                    Order ID: <b className="text-stone-800">{currentOrderId}</b>
+                  </p>
+
+                  {qrDataUrl && (
+                    <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 inline-block mb-3">
+                      <img
+                        src={qrDataUrl}
+                        alt="UPI QR Code"
+                        className="w-48 h-48 mx-auto"
+                      />
+                    </div>
+                  )}
+
+                  <p className="text-xs text-stone-500 mb-4 leading-relaxed">
+                    Scan using GPay, PhonePe, or any UPI app to complete payment.
+                  </p>
+
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowQR(false);
+                        sendWhatsAppOrder(currentOrderId, "UPI Paid (QR)");
+                      }}
+                      className="w-full py-2.5 rounded-full bg-[#1B3B2B] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#11261B] transition-all"
+                    >
+                      I’ve Paid
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowQR(false)}
+                      className="w-full py-2 rounded-full border border-stone-300 text-stone-600 text-xs font-semibold hover:bg-stone-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Place Order Submit CTA Button */}
             <button
-              onSubmit={onSubmitHandler}
               disabled={isCartEmpty}
               type="submit"
-              className={`bg-black text-white px-16 py-2 text-sm ${isCartEmpty ? "bg-slate-300 border cursor-not-allowed" : ""}`}
+              className={`w-full py-3.5 rounded-full text-white text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-xs ${
+                isCartEmpty
+                  ? "bg-stone-300 cursor-not-allowed"
+                  : "bg-[#1B3B2B] hover:bg-[#11261B] active:scale-95"
+              }`}
             >
-              PLACE ORDER
+              Place Order
             </button>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 
