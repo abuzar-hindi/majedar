@@ -1,0 +1,8 @@
+# Local environment secrets and generated runtime files.
+.env
+.env.*
+!.env.example
+node_modules/
+coverage/
+logs/
+*.log
