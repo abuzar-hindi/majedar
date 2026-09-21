@@ -33,6 +33,28 @@ const ORDER_ISSUES = [
   "Food quality complaint",
 ];
 
+export const metadata = {
+  title: "Help & Customer Support",
+  description:
+    "Need assistance with your food order, delivery, or reservations? Contact Majedaar Restaurant customer support in Ayodhya via phone, WhatsApp, or email.",
+  alternates: {
+    canonical: "/help",
+  },
+  openGraph: {
+    title: "Help & Support | Majedaar Restaurant Ayodhya",
+    description:
+      "Customer assistance and support for orders, delivery, and dining inquiries at Majedaar Restaurant.",
+    url: "/help",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Help & Support | Majedaar Restaurant Ayodhya",
+    description:
+      "Customer assistance and support for orders, delivery, and dining inquiries at Majedaar Restaurant.",
+  },
+};
+
 export default function Help() {
   return (
     <div className="min-h-screen bg-[#FAF8F5] pt-10 pb-20 px-4 sm:px-6 lg:px-8">
@@ -92,10 +114,10 @@ export default function Help() {
           </div>
         </div>
 
-        {/* Hours */}
+        {/* Support Card */}
         <div className="text-center py-4 px-6 bg-[#E3EFE8]/50 rounded-xl border border-[#C7DEC8]">
-          <p className="text-xs font-bold text-[#1B3B2B] mb-1">Support Hours</p>
-          <p className="text-xs text-stone-600">Monday – Sunday &nbsp;&bull;&nbsp; 11:00 AM – 11:30 PM</p>
+          <p className="text-xs font-bold text-[#1B3B2B] mb-1">Customer Care &amp; Support</p>
+          <p className="text-xs text-stone-600">We are dedicated to helping you with any order questions or assistance.</p>
           <p className="text-xs text-stone-400 mt-0.5">Ram Path, Sahabganj, Faizabad, UP 224001</p>
         </div>
       </div>

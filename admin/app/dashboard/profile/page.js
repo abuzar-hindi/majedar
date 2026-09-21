@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { PageHeader } from "@/components/ui";
-import { adminProfile } from "@/lib/mock-data";
+import { useAuth } from "@/lib/auth-context";
 
 function InfoRow({ label, value }) {
   return (
@@ -14,110 +13,66 @@ function InfoRow({ label, value }) {
 }
 
 export default function ProfilePage() {
-  const [data, setData] = useState(adminProfile);
-  const [draft, setDraft] = useState(adminProfile);
-  const [editing, setEditing] = useState(false);
-  const [changingPwd, setChangingPwd] = useState(false);
+  const { admin } = useAuth();
 
-  const startEdit = () => { setDraft({ ...data }); setEditing(true); };
-  const cancel = () => setEditing(false);
-  const save = () => { setData({ ...draft }); setEditing(false); };
-  const update = (k, v) => setDraft((prev) => ({ ...prev, [k]: v }));
+  const name = admin?.name || "Administrator";
+  const email = admin?.email || "admin@majedar.com";
+  const role = admin?.role === "admin" ? "Super Administrator" : "Administrator";
+  const initials = name
+    .split(" ")
+    .filter(Boolean)
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <>
       <PageHeader
         eyebrow="Your account"
         title="Admin Profile"
-        description="Manage the details attached to your office account."
+        description="Authenticated administrator account details."
       />
 
       <div className="profile-layout">
         {/* Main profile */}
         <section className="surface form-panel">
           <div className="profile-hero">
-            <span className="avatar avatar-large">{data.initials}</span>
+            <span className="avatar avatar-large">{initials}</span>
             <div>
-              <h2>{data.name}</h2>
-              <p>{data.role} · Majedaar</p>
+              <h2>{name}</h2>
+              <p>{role} · Majedaar Restaurant</p>
             </div>
-            {!editing && (
-              <button
-                className="button button-secondary"
-                style={{ marginLeft: "auto", padding: "7px 16px", fontSize: "11.5px" }}
-                onClick={startEdit}
-              >
-                Edit Profile
-              </button>
-            )}
           </div>
 
-          {editing ? (
-            <>
-              <div className="form-grid">
-                <label className="form-field">
-                  <span>Full Name</span>
-                  <input defaultValue={draft.name} onChange={(e) => update("name", e.target.value)} />
-                </label>
-                <label className="form-field">
-                  <span>Phone</span>
-                  <input defaultValue={draft.phone} onChange={(e) => update("phone", e.target.value)} />
-                </label>
-                <label className="form-field full">
-                  <span>Email Address</span>
-                  <input type="email" defaultValue={draft.email} onChange={(e) => update("email", e.target.value)} />
-                </label>
-              </div>
-              <div className="form-footer">
-                <button className="button button-secondary" onClick={cancel}>Cancel</button>
-                <button className="button button-primary" onClick={save}>Save Changes</button>
-              </div>
-            </>
-          ) : (
-            <>
-              <InfoRow label="Full Name" value={data.name} />
-              <InfoRow label="Email Address" value={data.email} />
-              <InfoRow label="Phone" value={data.phone} />
-              <InfoRow label="Role" value={data.role} />
-            </>
-          )}
+          <div style={{ marginTop: 20 }}>
+            <InfoRow label="Full Name" value={name} />
+            <InfoRow label="Email Address" value={email} />
+            <InfoRow label="Account Role" value={role} />
+            <InfoRow label="Session Security" value="HttpOnly Cookie Secured" />
+          </div>
         </section>
 
-        {/* Password */}
+        {/* Credentials Policy */}
         <section className="surface form-panel">
-          <h2>Password</h2>
-          {changingPwd ? (
-            <div className="form-stack">
-              <label className="form-field">
-                <span>Current Password</span>
-                <input type="password" placeholder="Enter current password" />
-              </label>
-              <label className="form-field">
-                <span>New Password</span>
-                <input type="password" placeholder="Enter new password" />
-              </label>
-              <label className="form-field">
-                <span>Confirm New Password</span>
-                <input type="password" placeholder="Repeat new password" />
-              </label>
-              <div className="form-footer" style={{ marginTop: 0 }}>
-                <button className="button button-secondary" onClick={() => setChangingPwd(false)}>Cancel</button>
-                <button className="button button-primary" onClick={() => setChangingPwd(false)}>Update Password</button>
-              </div>
-              <p className="helper-text">
-                Authentication is a UI-only flow. Password changes will be enabled with the backend.
-              </p>
+          <h2>Credentials &amp; Access Control</h2>
+          <div style={{ paddingTop: 4 }}>
+            <p style={{ color: "var(--muted)", fontSize: "12.5px", lineHeight: 1.7, marginBottom: "14px" }}>
+              Administrator credentials are encrypted with bcrypt and verified against server environment configurations.
+            </p>
+            <div
+              style={{
+                background: "var(--cream)",
+                border: "1px solid var(--line)",
+                padding: "12px 14px",
+                borderRadius: "4px",
+                fontSize: "12px",
+                color: "var(--ink-mid)",
+              }}
+            >
+              <strong>Security Note:</strong> Admin passwords and session tokens cannot be modified from the public browser client. Password rotations must be initiated through server environment variables or authenticated CLI management.
             </div>
-          ) : (
-            <div style={{ paddingTop: 4 }}>
-              <p style={{ color: "var(--muted)", fontSize: "12px", marginBottom: "18px" }}>
-                Your password is managed securely. Click below to change it.
-              </p>
-              <button className="button button-secondary" onClick={() => setChangingPwd(true)}>
-                Change Password
-              </button>
-            </div>
-          )}
+          </div>
         </section>
       </div>
     </>

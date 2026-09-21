@@ -1,19 +1,18 @@
-﻿"use client";
-import { useContext } from "react";
-import { ShopContext } from "../../contexts/ShopContext";
-import Title from "../../components/Title";
+"use client";
 
-export default function Orders() {
-  const { currency } = useContext(ShopContext);
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function OrdersRedirect() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/my-orders");
+  }, [router]);
 
   return (
-    <div className="border-t pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="text-2xl">
-        <Title text1={"MY"} text2={"ORDERS"} />
-      </div>
-      <div className="mt-6 text-stone-500 text-sm">
-        <p>Order history will be available once the backend is connected.</p>
-      </div>
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="animate-spin w-8 h-8 border-2 border-[#1B3B2B] border-t-transparent rounded-full" />
     </div>
   );
 }

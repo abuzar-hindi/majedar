@@ -1,5 +1,6 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
+import Logo from "./Logo";
 
 const Footer = () => {
   const scrollToMenu = () => {
@@ -15,7 +16,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="font-hero font-bold text-white text-xl tracking-wider uppercase">MAJEDAAR</span>
+              <Logo variant="full" className="h-10 sm:h-11 w-auto" alt="Majedaar Restaurant" />
             </div>
             <p className="text-xs text-stone-400 leading-relaxed">
               Fresh, authentic Indian dining &amp; online ordering. Quality ingredients, prepared daily.
@@ -29,14 +30,17 @@ const Footer = () => {
                 Order Online
               </button>
               <Link href="/orderanddine" className="hover:text-white transition-colors">Order &amp; Dine</Link>
+              <Link href="/reserve-table" className="hover:text-white transition-colors">Reserve a Table</Link>
               <Link href="/contact" className="hover:text-white transition-colors">Contact &amp; Location</Link>
+              <Link href="/faqs" className="hover:text-white transition-colors">FAQs</Link>
+              <Link href="/help" className="hover:text-white transition-colors">Help &amp; Support</Link>
             </div>
           </div>
 
           <div className="space-y-2 text-xs">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-2">Hours &amp; Info</h4>
-            <p className="text-stone-300">Open Daily: 11:00 AM – 11:30 PM</p>
-            <p className="text-stone-400">Pickup, Dine-in &amp; Direct Ordering</p>
+            <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-2">Dining &amp; Info</h4>
+            <p className="text-stone-300">Pickup, Dine-in &amp; Direct Ordering</p>
+            <p className="text-stone-400">Fresh Mughlai, Biryani &amp; Tandoor Specials</p>
             <p className="text-stone-400 mt-2">
               Phone: <a href="tel:+917905404619" className="text-white underline">+91 7905404619</a>
             </p>

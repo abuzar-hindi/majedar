@@ -1,20 +1,27 @@
-﻿"use client";
-import { useEffect, useRef, useState } from "react";
+"use client";
+
+import { useEffect, useRef, useState, useContext, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ShopContext } from "../contexts/ShopContext";
 
-const HERO_CATEGORIES = [
-  "Breakfast", "South Indian", "Tea & Coffee", "Momos", "Maggi",
-  "Chinese", "Pasta", "Rice & Biryani", "Burgers", "Sweets",
-  "Dal", "Main Course", "Roti & Papad", "Pizza",
-];
+const FALLBACK_CAT_IMG =
+  "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=200&q=80";
 
-const HeroCategoryTicker = () => {
+const HeroCategoryTicker = ({ onSelectCategory }) => {
+  const router = useRouter();
+  const { categories, loading } = useContext(ShopContext);
+
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
-  const [position, setPosition] = useState(HERO_CATEGORIES.length);
-  const [offset, setOffset] = useState(0);
-  const [animate, setAnimate] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const isHoveredRef = useRef(false);
+
+  // Only active categories returned from backend, preserving backend order, no "All"
+  const activeCategories = useMemo(() => {
+    if (!Array.isArray(categories)) return [];
+    return categories.filter((c) => c.isActive !== false && c.name);
+  }, [categories]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -24,66 +31,170 @@ const HeroCategoryTicker = () => {
     return () => mediaQuery.removeEventListener("change", updateMotionPreference);
   }, []);
 
-  useEffect(() => {
-    if (reducedMotion) setPosition(0);
-  }, [reducedMotion]);
+  const handleCategoryClick = (catName) => {
+    if (onSelectCategory) {
+      onSelectCategory(catName);
+    } else {
+      router.push(`/orderanddine?category=${encodeURIComponent(catName)}`);
+    }
+  };
 
   useEffect(() => {
-    const updateOffset = () => {
-      const viewport = viewportRef.current;
-      const track = trackRef.current;
-      const item = track?.children[position];
-      if (!viewport || !item) return;
-      setOffset(viewport.clientWidth / 2 - (item.offsetLeft + item.offsetWidth / 2));
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track || activeCategories.length === 0) return;
+
+    if (reducedMotion) {
+      track.style.transform = "none";
+      return;
+    }
+
+    let animationFrameId;
+    let lastTime = performance.now();
+    let currentX = 0;
+    let activeIdx = -1;
+    const speed = 30; // px/sec smooth, calm continuous movement
+
+    const singleSetCount = activeCategories.length;
+    const computeSingleSetWidth = () => {
+      if (!track.children || track.children.length <= singleSetCount) return 0;
+      const first = track.children[0];
+      const secondSetFirst = track.children[singleSetCount];
+      if (!first || !secondSetFirst) return 0;
+      return secondSetFirst.offsetLeft - first.offsetLeft;
     };
-    updateOffset();
-    const observer = new ResizeObserver(updateOffset);
-    if (viewportRef.current) observer.observe(viewportRef.current);
-    return () => observer.disconnect();
-  }, [position]);
 
-  useEffect(() => {
-    if (reducedMotion) return undefined;
-    const moveToNextCategory = () => {
-      setAnimate(true);
-      setPosition((current) => current + 1);
+    let singleSetWidth = computeSingleSetWidth();
+
+    const handleResize = () => {
+      singleSetWidth = computeSingleSetWidth();
     };
-    const tickerTimer = window.setInterval(moveToNextCategory, 2400);
-    return () => window.clearInterval(tickerTimer);
-  }, [reducedMotion]);
+    window.addEventListener("resize", handleResize);
 
-  useEffect(() => {
-    if (position < HERO_CATEGORIES.length * 2) return undefined;
-    const resetTimer = window.setTimeout(() => {
-      setAnimate(false);
-      setPosition(HERO_CATEGORIES.length);
-      window.requestAnimationFrame(() => setAnimate(true));
-    }, 1250);
-    return () => window.clearTimeout(resetTimer);
-  }, [position]);
+    const onMouseEnter = () => {
+      isHoveredRef.current = true;
+    };
+    const onMouseLeave = () => {
+      isHoveredRef.current = false;
+    };
+
+    viewport.addEventListener("mouseenter", onMouseEnter);
+    viewport.addEventListener("mouseleave", onMouseLeave);
+
+    const step = (now) => {
+      const delta = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      if (!isHoveredRef.current && singleSetWidth > 0) {
+        currentX = (currentX + speed * delta) % singleSetWidth;
+        track.style.transform = `translate3d(${-currentX}px, 0, 0)`;
+
+        const viewportCenter = viewport.clientWidth / 2;
+        const children = track.children;
+        let closestIdx = -1;
+        let minDiff = Infinity;
+
+        for (let i = 0; i < children.length; i++) {
+          const item = children[i];
+          const itemCenter = item.offsetLeft + item.offsetWidth / 2 - currentX;
+          const diff = Math.abs(itemCenter - viewportCenter);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestIdx = i;
+          }
+        }
+
+        // Highlight if within center focal zone (within 70px)
+        const activeTarget = minDiff < 70 ? closestIdx : -1;
+
+        if (activeTarget !== activeIdx) {
+          if (activeIdx >= 0 && children[activeIdx]) {
+            children[activeIdx].classList.remove("is-active");
+          }
+          if (activeTarget >= 0 && children[activeTarget]) {
+            children[activeTarget].classList.add("is-active");
+          }
+          activeIdx = activeTarget;
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", handleResize);
+      viewport.removeEventListener("mouseenter", onMouseEnter);
+      viewport.removeEventListener("mouseleave", onMouseLeave);
+    };
+  }, [reducedMotion, activeCategories]);
+
+  // Loading state placeholder
+  if (loading && activeCategories.length === 0) {
+    return (
+      <div className="hero-category-ticker" aria-label="Loading food categories">
+        <div className="hero-category-ticker__track justify-center">
+          {[1, 2, 3, 4, 5, 6].map((idx) => (
+            <div key={idx} className="flex flex-col items-center gap-2 animate-pulse flex-none px-3">
+              <div className="w-14 h-14 sm:w-14 sm:h-14 rounded-full bg-stone-200/80 border-2 border-stone-200" />
+              <div className="w-12 h-3 rounded-md bg-stone-200/80" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Graceful empty state
+  if (activeCategories.length === 0) {
+    return null;
+  }
+
+  // Create enough duplicate sets for an infinite seamless ticker
+  const repeatCount = Math.max(3, Math.ceil(18 / activeCategories.length));
+  const tickerItems = Array.from({ length: repeatCount }).flatMap(() => activeCategories);
 
   return (
     <div ref={viewportRef} className="hero-category-ticker" aria-label="Our food categories">
-      <div
-        ref={trackRef}
-        className={`hero-category-ticker__track${animate ? " is-animated" : ""}`}
-        style={{ transform: `translate3d(${offset}px, 0, 0)` }}
-      >
-        {[...HERO_CATEGORIES, ...HERO_CATEGORIES, ...HERO_CATEGORIES].map((category, index) => (
-          <span
-            className={`hero-category-ticker__item${index === position ? " is-active" : ""}`}
-            key={`${category}-${index}`}
-            aria-hidden={index !== position}
-          >
-            {category}
-          </span>
-        ))}
+      <div ref={trackRef} className="hero-category-ticker__track">
+        {tickerItems.map((cat, index) => {
+          const imgUrl = cat.image?.url || FALLBACK_CAT_IMG;
+          return (
+            <button
+              type="button"
+              key={`${cat._id || cat.name}-${index}`}
+              onClick={() => handleCategoryClick(cat.name)}
+              className="hero-category-ticker__item focus:outline-none focus:ring-2 focus:ring-[#1B3B2B]/40 rounded-full"
+              aria-hidden={index >= activeCategories.length}
+              title={`Explore ${cat.name}`}
+            >
+              <span className="hero-category-ticker__content">
+                <span className="hero-category-ticker__thumb">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imgUrl}
+                    alt=""
+                    className="hero-category-ticker__img"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = FALLBACK_CAT_IMG;
+                    }}
+                  />
+                </span>
+                <span className="hero-category-ticker__name">{cat.name}</span>
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-const Hero = () => {
+const Hero = ({ onSelectCategory }) => {
   const scrollToMenu = () => {
     const element = document.getElementById("homepage-menu-preview");
     if (element) {
@@ -106,19 +217,20 @@ const Hero = () => {
             MAJEDAAR RESTAURANT
           </h1>
 
-          {/* Category Ticker */}
-          <HeroCategoryTicker />
+          {/* Category Ticker - Dynamic from Backend */}
+          <HeroCategoryTicker onSelectCategory={onSelectCategory} />
 
           {/* CTA Actions */}
           <div className="flex flex-wrap justify-center gap-3.5">
             <Link href="/orderanddine">
-              <button className="px-8 py-3.5 rounded-full bg-[#1B3B2B] hover:bg-[#11261B] text-white text-xs sm:text-sm font-bold uppercase tracking-wider active:scale-95 transition-all shadow-2xs">
+              <button className="px-8 py-3.5 rounded-full bg-[#1B3B2B] hover:bg-[#11261B] text-white text-xs sm:text-sm font-bold uppercase tracking-wider active:scale-95 transition-all shadow-2xs cursor-pointer">
                 Order Now
               </button>
             </Link>
             <button
+              type="button"
               onClick={scrollToMenu}
-              className="px-7 py-3.5 rounded-full bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-2xs"
+              className="px-7 py-3.5 rounded-full bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shadow-2xs cursor-pointer"
             >
               Explore Menu
             </button>

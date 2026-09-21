@@ -30,8 +30,24 @@ export const config = {
         path: '/',
     },
     cors: {
-        origin: process.env.CLIENT_URL || true,
+        origin: process.env.CLIENT_URL
+            ? process.env.CLIENT_URL.includes(',')
+                ? process.env.CLIENT_URL.split(',').map((s) => s.trim())
+                : process.env.CLIENT_URL
+            : true,
         credentials: true,
+    },
+    resendApiKey: process.env.RESEND_API_KEY || '',
+    emailFrom: process.env.EMAIL_FROM || 'Majedaar Restaurant <onboarding@resend.dev>',
+    razorpay: {
+        keyId: process.env.RAZORPAY_KEY_ID || '',
+        keySecret: process.env.RAZORPAY_KEY_SECRET || '',
+        webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
+    },
+    vapid: {
+        publicKey: process.env.VAPID_PUBLIC_KEY || 'BJ8B4LAumNPlvBe0a4VC2MuuvzMh6IXk-OH1rJqbozPqLs_XlJ8zzqg8C2wmGCz4wEPQb9Z9XMJeO_5zitiz59s',
+        privateKey: process.env.VAPID_PRIVATE_KEY || 'EtwHkxk3C_nlHmo0Dwi6imRzgJcwZsif7Ws31B7HbbM',
+        subject: process.env.VAPID_SUBJECT || 'mailto:majedarrestaurant@gmail.com',
     },
 };
 

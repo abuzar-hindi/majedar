@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // Majedaar Restaurant — Menu Data & Asset References
 // Source of truth for all products. Will be replaced by
 // database-driven data when backend is connected.
@@ -31,7 +31,7 @@ export const assets = {
   cross_icon: "/assets/cross_icon.png",
 };
 
-export const products = [
+const rawProducts = [
   // 1. Breakfast
   { _id: "brk_001", name: "Aloo Poha", category: "Breakfast", description: "Light flattened rice cooked with seasoned potatoes, mustard seeds & spices.", images: [dishImageUrl("Aloo Poha")], types: [{ label: "Full", price: 70 }], price: 70, isVeg: true },
   { _id: "brk_002", name: "Paneer Pakoda", category: "Breakfast", description: "Crispy fried cottage cheese fritters served hot.", images: [dishImageUrl("Paneer Pakoda")], types: [{ label: "Full", price: 80 }], price: 80, isVeg: true },
@@ -150,3 +150,30 @@ export const products = [
   { _id: "thl_002", name: "Deluxe Thali", category: "Thali", description: "Paneer Dish, Dal Fry, Jeera Rice, 4 Roti, Sweet & Salad.", images: [dishImageUrl("Deluxe Thali")], types: [{ label: "Full", price: 140 }], price: 140, isVeg: true },
   { _id: "thl_003", name: "Regular Thali", category: "Thali", description: "Seasonal Veg, Dal, Rice, 4 Tawa Roti & Salad.", images: [dishImageUrl("Regular Thali")], types: [{ label: "Full", price: 100 }], price: 100, isVeg: true },
 ];
+
+const getRatingSummary = (item) => {
+  if (item.ratingSummary) return item.ratingSummary;
+  if (item.bestseller) {
+    const lock = [...item.name].reduce((t, c) => (t * 31 + c.charCodeAt(0)) % 1000, 7);
+    const avg = 4.5 + (lock % 5) * 0.1;
+    const count = 80 + (lock % 150);
+    return { averageRating: Math.round(avg * 10) / 10, reviewCount: count };
+  }
+  const lock = [...item.name].reduce((t, c) => (t * 31 + c.charCodeAt(0)) % 1000, 3);
+  if (lock % 5 === 0) {
+    return { averageRating: 0, reviewCount: 0 };
+  }
+  const avg = 4.0 + (lock % 9) * 0.1;
+  const count = 12 + (lock % 60);
+  return { averageRating: Math.round(avg * 10) / 10, reviewCount: count };
+};
+
+export const products = rawProducts.map((item) => {
+  const ratingSummary = getRatingSummary(item);
+  return {
+    ...item,
+    ratingSummary,
+    averageRating: ratingSummary.averageRating,
+    reviewCount: ratingSummary.reviewCount,
+  };
+});

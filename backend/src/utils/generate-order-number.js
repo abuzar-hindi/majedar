@@ -1,5 +1,11 @@
-/*
- * Responsibility: Define the future order-number generation boundary.
- * Future work: Generate unique, traceable customer-facing order identifiers without trusting client input.
- * Integration: order.service.js will use this utility before persisting Order records and payment references.
- */
+import crypto from 'node:crypto';
+
+export const generateOrderNumber = () => {
+    const now = new Date();
+    const year = String(now.getFullYear()).slice(-2);
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
+
+    return `MD-${year}${month}${day}-${randomHex}`;
+};

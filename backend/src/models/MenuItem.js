@@ -17,11 +17,27 @@ const menuItemSchema = new mongoose.Schema(
             minlength: [5, 'Description must be at least 5 characters long'],
             maxlength: [1000, 'Description cannot exceed 1000 characters'],
         },
+        pricingType: {
+            type: String,
+            enum: ['single', 'half-full'],
+            default: 'single',
+            required: true,
+        },
         price: {
             type: Number,
-            required: [true, 'Price is required'],
             min: [0.01, 'Price must be a positive number greater than zero'],
+            default: null,
             index: true,
+        },
+        halfPrice: {
+            type: Number,
+            min: [0.01, 'Half price must be a positive number greater than zero'],
+            default: null,
+        },
+        fullPrice: {
+            type: Number,
+            min: [0.01, 'Full price must be a positive number greater than zero'],
+            default: null,
         },
         category: {
             type: mongoose.Schema.Types.ObjectId,

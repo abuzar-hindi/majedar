@@ -1,8 +1,26 @@
-﻿import NewsLetter from "../../components/NewsLetter";
+import NewsLetter from "../../components/NewsLetter";
+import Logo from "../../components/Logo";
 
 export const metadata = {
-  title: "Contact & Location",
-  description: "Visit Majedaar Restaurant in Faizabad, UP. Ram Path, Sahabganj. Open daily 11AM-11:30PM. Call +91 7905404619.",
+  title: "Contact & Location | Ayodhya Restaurant",
+  description:
+    "Visit Majedaar Restaurant in Ayodhya, Uttar Pradesh on Ram Path, Sahabganj for dine-in, takeaway, and fast home delivery. Call +91 7905404619.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact & Location | Majedaar Restaurant, Ayodhya",
+    description:
+      "Find location, phone number, and directions for Majedaar Restaurant on Ram Path, Sahabganj, Ayodhya.",
+    url: "/contact",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact & Location | Majedaar Restaurant, Ayodhya",
+    description:
+      "Find location, phone number, and directions for Majedaar Restaurant on Ram Path, Sahabganj, Ayodhya.",
+  },
 };
 
 export default function Contact() {
@@ -19,10 +37,8 @@ export default function Contact() {
           {/* Information Card */}
           <div className="bg-white rounded-2xl border border-stone-200/80 p-6 sm:p-8 flex flex-col justify-between shadow-2xs">
             <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="font-hero font-bold text-xl text-[#1B3B2B] tracking-wider uppercase">
-                  MAJEDAAR RESTAURANT
-                </span>
+              <div className="flex items-center mb-3">
+                <Logo variant="full" className="h-9 w-auto" />
               </div>
               <p className="text-stone-600 text-sm mb-6 leading-relaxed">
                 Visit us or place your order online for fresh, delicious food.
@@ -54,9 +70,9 @@ export default function Contact() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-stone-800 text-xs uppercase tracking-wider mb-1">Opening Hours</h3>
-                  <p className="text-stone-600">Open Daily: 11:00 AM &ndash; 11:30 PM</p>
-                  <p className="text-xs text-stone-400 mt-0.5">Dine-in, Takeaway &amp; Delivery</p>
+                  <h3 className="font-bold text-stone-800 text-xs uppercase tracking-wider mb-1">Services Offered</h3>
+                  <p className="text-stone-600">Dine-in, Takeaway &amp; Express Delivery</p>
+                  <p className="text-xs text-stone-400 mt-0.5">Contact us directly for party &amp; catering orders</p>
                 </div>
               </div>
             </div>
@@ -75,6 +91,17 @@ export default function Contact() {
       </div>
 
       <NewsLetter />
+
+      {/* Large Brand Section Above Footer */}
+      <section className="w-full pt-16 pb-12 sm:pt-24 sm:pb-16 border-t border-stone-200/80 bg-[#FAF8F5] flex flex-col items-center justify-center px-4">
+        <div className="max-w-2xl w-full flex flex-col items-center text-center">
+          <Logo
+            variant="full"
+            className="w-56 sm:w-72 md:w-96 max-w-full h-auto"
+            alt="Majedaar Restaurant Brand"
+          />
+        </div>
+      </section>
     </div>
   );
 }

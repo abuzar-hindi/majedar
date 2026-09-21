@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, createContext, useContext, useCallback } from "react";
 
 // ── Search icon SVG ───────────────────────────────────────────────────────────
 function SearchIcon() {
@@ -217,29 +217,36 @@ export function Toggle({ on, onToggle, label }) {
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
-let _toastFn = null;
+const ToastContext = createContext(() => {});
+
 export function useToast() {
-  return _toastFn;
+  const context = useContext(ToastContext);
+  return context || (() => {});
 }
 
-export function ToastProvider() {
+export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
-  _toastFn = (message, type = "success") => {
-    const id = Date.now();
+  const showToast = useCallback((message, type = "success") => {
+    const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3000);
-  };
-
-  if (!toasts.length) return null;
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3500);
+  }, []);
 
   return (
-    <div className="toast-container">
-      {toasts.map((t) => (
-        <div key={t.id} className={`toast ${t.type}`}>
-          {t.message}
+    <ToastContext.Provider value={showToast}>
+      {children}
+      {toasts.length > 0 && (
+        <div className="toast-container">
+          {toasts.map((t) => (
+            <div key={t.id} className={`toast ${t.type}`}>
+              {t.message}
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+    </ToastContext.Provider>
   );
 }

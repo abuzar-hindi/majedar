@@ -9,6 +9,7 @@ import { signToken, verifyToken } from '../../src/utils/token.js';
 import { setCustomerAuthCookie, clearCustomerAuthCookie } from '../../src/utils/cookie.js';
 import { authenticateCustomer } from '../../src/middleware/customer-auth.middleware.js';
 import { Customer } from '../../src/models/Customer.js';
+import { CustomerOtp } from '../../src/models/CustomerOtp.js';
 import * as customerAuthService from '../../src/services/customer-auth/customer-auth.service.js';
 import { config } from '../../src/config/env.js';
 
@@ -134,11 +135,21 @@ describe('Customer Authentication Test Suite', () => {
         test('signupCustomer hashes password and returns customer without passwordHash', async () => {
             const origFindOne = Customer.findOne;
             const origSave = Customer.prototype.save;
+            const origOtpFindOne = CustomerOtp.findOne;
+            const origOtpDeleteMany = CustomerOtp.deleteMany;
+            const origOtpSave = CustomerOtp.prototype.save;
             let savedDoc = null;
 
             Customer.findOne = async () => null;
             Customer.prototype.save = async function () {
                 savedDoc = this;
+                return this;
+            };
+            CustomerOtp.findOne = () => ({
+                sort: async () => null,
+            });
+            CustomerOtp.deleteMany = async () => ({ deletedCount: 0 });
+            CustomerOtp.prototype.save = async function () {
                 return this;
             };
 
@@ -163,6 +174,9 @@ describe('Customer Authentication Test Suite', () => {
             } finally {
                 Customer.findOne = origFindOne;
                 Customer.prototype.save = origSave;
+                CustomerOtp.findOne = origOtpFindOne;
+                CustomerOtp.deleteMany = origOtpDeleteMany;
+                CustomerOtp.prototype.save = origOtpSave;
             }
         });
 

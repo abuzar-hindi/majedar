@@ -28,7 +28,6 @@ export const createCategory = async (data, file = null) => {
         slug,
         image,
         isActive: data.isActive !== undefined ? data.isActive : true,
-        sortOrder: data.sortOrder !== undefined ? data.sortOrder : 0,
     });
 
     try {
@@ -52,7 +51,7 @@ export const getAllCategories = async ({ onlyActive = false } = {}) => {
         filter.isActive = true;
     }
 
-    const categories = await Category.find(filter).sort({ sortOrder: 1, name: 1 });
+    const categories = await Category.find(filter).sort({ name: 1 });
     return categories;
 };
 
@@ -95,9 +94,6 @@ export const updateCategory = async (id, updates, file = null) => {
 
     if (updates.isActive !== undefined) {
         category.isActive = updates.isActive;
-    }
-    if (updates.sortOrder !== undefined) {
-        category.sortOrder = updates.sortOrder;
     }
 
     // Handle image update

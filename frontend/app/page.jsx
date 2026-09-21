@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import Hero from "../components/Hero";
 import BestsellerSection from "../components/BestsellerSection";
@@ -9,9 +9,17 @@ import RestaurantStory from "../components/RestaurantStory";
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const handleSelectCategory = (catName) => {
+    setActiveCategory(catName);
+    const element = document.getElementById("homepage-menu-preview");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
-      <Hero />
+      <Hero onSelectCategory={handleSelectCategory} />
       <BestsellerSection />
       <CategoryNav activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
       <MenuPreview selectedCategory={activeCategory} />
