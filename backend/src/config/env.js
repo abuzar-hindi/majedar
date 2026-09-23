@@ -38,7 +38,7 @@ export const config = {
         credentials: true,
     },
     resendApiKey: process.env.RESEND_API_KEY || '',
-    emailFrom: process.env.EMAIL_FROM || 'Majedaar Restaurant <[EMAIL_ADDRESS]>',
+    emailFrom: process.env.EMAIL_FROM || 'Majedaar Restaurant <noreply@majedaar.com>',
     razorpay: {
         keyId: process.env.RAZORPAY_KEY_ID || '',
         keySecret: process.env.RAZORPAY_KEY_SECRET || '',

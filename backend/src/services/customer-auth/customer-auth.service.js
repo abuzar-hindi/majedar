@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { Customer } from '../../models/Customer.js';
+import { CustomerOtp } from '../../models/CustomerOtp.js';
 import {
     ConflictError,
     UnauthorizedError,

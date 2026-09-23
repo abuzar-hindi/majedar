@@ -7,6 +7,7 @@ import app from '../../src/app.js';
 import { Customer } from '../../src/models/Customer.js';
 import { CustomerOtp } from '../../src/models/CustomerOtp.js';
 import { authenticateCustomer } from '../../src/middleware/customer-auth.middleware.js';
+import { signToken } from '../../src/utils/token.js';
 import { config } from '../../src/config/env.js';
 
 describe('Customer Email Verification and Password Reset Suite', () => {

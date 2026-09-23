@@ -29,7 +29,10 @@ export const createMenuItemSchema = z
             .trim()
             .min(5, 'Description must be at least 5 characters long')
             .max(1000, 'Description cannot exceed 1000 characters'),
-        price: coercePositiveNumber,
+        pricingType: z.enum(['single', 'half-full']).default('single'),
+        price: coercePositiveNumber.optional().nullable(),
+        halfPrice: coercePositiveNumber.optional().nullable(),
+        fullPrice: coercePositiveNumber.optional().nullable(),
         category: z
             .string({ required_error: 'Category ID is required' })
             .regex(objectIdRegex, 'Category must be a valid ID'),
@@ -44,7 +47,32 @@ export const createMenuItemSchema = z
             .optional()
             .nullable(),
     })
-    .strip();
+    .superRefine((data, ctx) => {
+        if (data.pricingType === 'single') {
+            if (!data.price || data.price <= 0) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Price must be provided for single pricing',
+                    path: ['price'],
+                });
+            }
+        } else if (data.pricingType === 'half-full') {
+            if (!data.halfPrice || data.halfPrice <= 0) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Half price must be provided for half-full pricing',
+                    path: ['halfPrice'],
+                });
+            }
+            if (!data.fullPrice || data.fullPrice <= 0) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Full price must be provided for half-full pricing',
+                    path: ['fullPrice'],
+                });
+            }
+        }
+    });
 
 export const updateMenuItemSchema = z
     .object({
@@ -60,7 +88,10 @@ export const updateMenuItemSchema = z
             .min(5, 'Description must be at least 5 characters long')
             .max(1000, 'Description cannot exceed 1000 characters')
             .optional(),
-        price: coercePositiveNumber.optional(),
+        pricingType: z.enum(['single', 'half-full']).optional(),
+        price: coercePositiveNumber.optional().nullable(),
+        halfPrice: coercePositiveNumber.optional().nullable(),
+        fullPrice: coercePositiveNumber.optional().nullable(),
         category: z
             .string()
             .regex(objectIdRegex, 'Category must be a valid ID')
