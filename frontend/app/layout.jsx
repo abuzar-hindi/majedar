@@ -77,10 +77,10 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero.png",
-        width: 1200,
-        height: 630,
-        alt: "Majedaar Restaurant Ayodhya - Authentic Indian Food",
+        url: "/brand/logo-full.png",
+        width: 627,
+        height: 284,
+        alt: "Majedaar Restaurant Ayodhya Logo",
       },
     ],
   },
@@ -89,7 +89,7 @@ export const metadata = {
     title: "Majedaar Restaurant | Fresh Indian Food & Online Ordering in Ayodhya",
     description:
       "Order authentic Indian cuisine, freshly prepared biryanis, momos, and regional delicacies from Majedaar Restaurant in Ayodhya.",
-    images: ["/images/hero.png"],
+    images: ["/brand/logo-full.png"],
   },
   robots: {
     index: true,
@@ -109,7 +109,7 @@ const restaurantJsonLd = {
   "@type": "Restaurant",
   name: "Majedaar Restaurant",
   alternateName: "Majedaar Restaurant & Cafe",
-  image: `${siteUrl}/images/hero.png`,
+  image: `${siteUrl}/brand/logo-full.png`,
   logo: `${siteUrl}/brand/logo-full.png`,
   url: siteUrl,
   telephone: "+91-7905404619",

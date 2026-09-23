@@ -31,6 +31,9 @@ import { errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
 
+// Trust Render reverse proxy for HTTPS termination and secure cookies
+app.set('trust proxy', 1);
+
 // Webhook raw body parser (MUST run before express.json() for HMAC signature verification)
 app.use('/api/payments/webhook', express.raw({ type: '*/*' }));
 

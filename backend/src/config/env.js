@@ -17,7 +17,7 @@ export const config = {
         maxAge: 8 * 60 * 60 * 1000,
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
     },
     customerCookie: {
@@ -26,19 +26,19 @@ export const config = {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
     },
     cors: {
         origin: process.env.CLIENT_URL
             ? process.env.CLIENT_URL.includes(',')
-                ? process.env.CLIENT_URL.split(',').map((s) => s.trim())
-                : process.env.CLIENT_URL
+                ? process.env.CLIENT_URL.split(',').map((s) => s.trim().replace(/\/+$/, '')).filter(Boolean)
+                : process.env.CLIENT_URL.trim().replace(/\/+$/, '')
             : true,
         credentials: true,
     },
     resendApiKey: process.env.RESEND_API_KEY || '',
-    emailFrom: process.env.EMAIL_FROM || 'Majedaar Restaurant <onboarding@resend.dev>',
+    emailFrom: process.env.EMAIL_FROM || 'Majedaar Restaurant <[EMAIL_ADDRESS]>',
     razorpay: {
         keyId: process.env.RAZORPAY_KEY_ID || '',
         keySecret: process.env.RAZORPAY_KEY_SECRET || '',

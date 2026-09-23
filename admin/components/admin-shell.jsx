@@ -223,8 +223,11 @@ export default function AdminShell({ children }) {
     let isMounted = true;
     async function loadUnreadCount() {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${apiUrl}/api/admin/messages/unread-count`, {
+        const apiBase = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/+$/, "");
+        const endpoint = apiBase.endsWith("/api")
+          ? `${apiBase}/admin/messages/unread-count`
+          : `${apiBase}/api/admin/messages/unread-count`;
+        const res = await fetch(endpoint, {
           credentials: "include",
         });
         if (res.ok) {

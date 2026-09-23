@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
       `Order fresh ${product.name} online from Majedaar Restaurant in Ayodhya. Prepared fresh with quality ingredients. Fast delivery & dine-in.`;
 
     const imageUrl =
-      product.image?.url || product.images?.[0] || `${siteUrl}/images/hero.png`;
+      product.image?.url || product.images?.[0] || `${siteUrl}/brand/logo-full.png`;
 
     return {
       title,
